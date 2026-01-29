@@ -106,6 +106,7 @@ export const sensorIcons = {
   temperature: <Thermometer className="w-5 h-5" />,
   humidity: <Droplets className="w-5 h-5" />,
   pm25: <Wind className="w-5 h-5" />,
+  pm10: <Wind className="w-5 h-5" />,
   noise: <Volume2 className="w-5 h-5" />,
   light: <Sun className="w-5 h-5" />,
   health: <Activity className="w-5 h-5" />,

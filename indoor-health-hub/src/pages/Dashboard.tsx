@@ -8,6 +8,7 @@ import { AlertsPanel } from "@/components/AlertsPanel";
 import { DeviceStatus } from "@/components/DeviceStatus";
 import { Disclaimer, FooterDisclaimer } from "@/components/Disclaimer";
 import { HealthExplainer } from "@/components/HealthExplainer";
+import { AQICard } from "@/components/AQICard";
 
 const Dashboard = () => {
   return (
@@ -15,7 +16,7 @@ const Dashboard = () => {
       <Header />
 
       <main className="container mx-auto px-4 py-6 space-y-6">
-        {/* Top Disclaimer */}
+        {/* ================= DISCLAIMER ================= */}
         <motion.div
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
@@ -26,14 +27,23 @@ const Dashboard = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* ================= MAIN AREA ================= */}
           <div className="lg:col-span-2 space-y-6">
-            {/* Overall Health */}
+            {/* Overall Health Score */}
             <HealthScoreCard />
+
+            {/* AQI (Evidence-based, particulate only) */}
+            <motion.section
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.15 }}
+            >
+              <AQICard />
+            </motion.section>
 
             {/* Live Sensor Readings */}
             <motion.section
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
+              transition={{ delay: 0.25 }}
             >
               <h2 className="text-lg font-semibold mb-4">
                 Live Environmental Readings

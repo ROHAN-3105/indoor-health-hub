@@ -1,30 +1,41 @@
+import { Fan, Wind, VolumeX, Droplets } from "lucide-react";
 import { useSensor } from "@/contexts/SensorContext";
+import { Card } from "@/components/ui/card";
+
+const iconMap: Record<string, JSX.Element> = {
+  "Use Air Purification": <Wind className="w-4 h-4" />,
+  "Reduce Noise Exposure": <VolumeX className="w-4 h-4" />,
+  "Improve Cooling": <Fan className="w-4 h-4" />,
+  "Reduce Humidity": <Droplets className="w-4 h-4" />,
+};
 
 export const RecommendationsPanel = () => {
-  const { healthScore } = useSensor();
-
-  if (!healthScore || healthScore.reasons.length === 0) {
-    return (
-      <div className="glass-card p-4 rounded-xl">
-        <h3 className="font-semibold mb-2">Recommendations</h3>
-        <p className="text-sm text-muted-foreground">
-          Environment is within optimal ranges.
-        </p>
-      </div>
-    );
-  }
+  const { recommendations } = useSensor();
+  if (!recommendations.length) return null;
 
   return (
-    <div className="glass-card p-4 rounded-xl space-y-3">
-      <h3 className="font-semibold">Recommendations</h3>
-      <ul className="space-y-2">
-        {healthScore.reasons.map((r, i) => (
-          <li key={i} className="text-sm flex gap-2">
-            <span className="mt-2 w-2 h-2 rounded-full bg-primary" />
-            {r}
-          </li>
+    <Card className="p-5 space-y-4">
+      <h3 className="text-base font-semibold">Recommended Actions</h3>
+
+      <div className="space-y-3">
+        {recommendations.map((rec, i) => (
+          <div
+            key={i}
+            className="flex gap-3 rounded-xl bg-muted/30 p-3"
+          >
+            <div className="pt-1 text-primary">
+              {iconMap[rec.title] ?? <Wind className="w-4 h-4" />}
+            </div>
+
+            <div>
+              <p className="font-medium">{rec.title}</p>
+              <p className="text-sm text-muted-foreground">
+                {rec.action}
+              </p>
+            </div>
+          </div>
         ))}
-      </ul>
-    </div>
+      </div>
+    </Card>
   );
 };

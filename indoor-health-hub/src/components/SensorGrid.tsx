@@ -30,8 +30,6 @@ export const SensorGrid = () => {
 
   return (
     <section className="mt-6">
-      <h3 className="text-lg font-semibold mb-4">Live Environmental Readings</h3>
-
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <SensorCard
           title="Temperature"
@@ -57,6 +55,16 @@ export const SensorGrid = () => {
           unit="µg/m³"
           icon={sensorIcons.pm25}
           status={getStatus(latest?.pm25 ?? null, 35, 55)}
+          updatedAt={latest?.timestamp}
+        />
+
+        {/* ✅ NEW PM10 CARD */}
+        <SensorCard
+          title="PM10"
+          value={latest?.pm10 ?? null}
+          unit="µg/m³"
+          icon={sensorIcons.pm10}
+          status={getStatus(latest?.pm10 ?? null, 50, 100)}
           updatedAt={latest?.timestamp}
         />
 

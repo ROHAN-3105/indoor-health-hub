@@ -4,6 +4,7 @@ from pydantic import BaseModel
 from datetime import datetime, timedelta
 from typing import Dict, List
 from recommendation_engine import generate_recommendations
+from aqi_engine import calculate_pm_aqi
 
 from alerts_engine import generate_alerts
 from health_engine import calculate_health_score
@@ -156,9 +157,26 @@ def list_devices():
         })
 
     return devices
+
 @app.get("/api/recommendations/{device_id}")
 def recommendations(device_id: str):
     if device_id not in DEVICE_STATE:
         raise HTTPException(404, "Device offline")
 
     return generate_recommendations(DEVICE_STATE[device_id])
+
+#AQI 
+@app.get("/api/aqi/{device_id}")
+def get_aqi(device_id: str):
+    if device_id not in DEVICE_STATE:
+        raise HTTPException(status_code=404, detail="Device offline")
+
+    data = DEVICE_STATE[device_id]
+
+    pm25 = data.get("pm25")
+    pm10 = data.get("pm10")
+
+    if pm25 is None or pm10 is None:
+        raise HTTPException(status_code=400, detail="PM data not available")
+
+    return calculate_pm_aqi(pm25, pm10)
