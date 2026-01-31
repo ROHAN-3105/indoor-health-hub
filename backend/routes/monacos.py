@@ -1,12 +1,16 @@
 from fastapi import APIRouter, HTTPException
-from typing import List
 from datetime import datetime
+from schemas import SensorData
+from db import get_db, ensure_device_exists
 
 router = APIRouter(prefix="/api", tags=["Monacos"])
 
-# TEMP in-memory store (later replaced by DB)
+# In-memory cache for latest device data
 LATEST_DATA = {}
 
+# -------------------------------------------------
+# GET latest data (frontend dashboard)
+# -------------------------------------------------
 @router.get("/latest/{device_id}")
 def get_latest(device_id: str):
     if device_id not in LATEST_DATA:
@@ -14,6 +18,9 @@ def get_latest(device_id: str):
     return LATEST_DATA[device_id]
 
 
+# -------------------------------------------------
+# HEALTH SCORE
+# -------------------------------------------------
 @router.get("/health-score/{device_id}")
 def get_health_score(device_id: str):
     if device_id not in LATEST_DATA:
@@ -23,10 +30,6 @@ def get_health_score(device_id: str):
 
     score = 100
     reasons = []
-
-    if data["co2"] > 1000:
-        score -= 20
-        reasons.append("Elevated CO₂ levels detected")
 
     if data["pm25"] > 35:
         score -= 20
@@ -46,14 +49,12 @@ def get_health_score(device_id: str):
 
     score = max(score, 0)
 
-    if score >= 80:
-        level = "Good"
-    elif score >= 60:
-        level = "Moderate"
-    elif score >= 40:
-        level = "Poor"
-    else:
-        level = "Hazardous"
+    level = (
+        "Good" if score >= 80 else
+        "Moderate" if score >= 60 else
+        "Poor" if score >= 40 else
+        "Hazardous"
+    )
 
     return {
         "score": score,
@@ -62,6 +63,9 @@ def get_health_score(device_id: str):
     }
 
 
+# -------------------------------------------------
+# ALERTS
+# -------------------------------------------------
 @router.get("/alerts/{device_id}")
 def get_alerts(device_id: str):
     if device_id not in LATEST_DATA:
@@ -70,23 +74,74 @@ def get_alerts(device_id: str):
     data = LATEST_DATA[device_id]
     alerts = []
 
-    def add_alert(param, message, severity):
+    def add_alert(parameter, message, severity):
         alerts.append({
-            "id": f"{param}-{datetime.utcnow().timestamp()}",
-            "parameter": param,
+            "id": f"{parameter}-{datetime.utcnow().timestamp()}",
+            "parameter": parameter,
             "message": message,
-            "type": severity,
-            "timestamp": datetime.utcnow().isoformat(),
-            "acknowledged": False
+            "severity": severity,
+            "timestamp": datetime.utcnow().isoformat()
         })
 
-    if data["co2"] > 1000:
-        add_alert("CO2", "CO₂ levels are high", "moderate")
-
     if data["pm25"] > 35:
-        add_alert("PM2.5", "PM2.5 concentration is unhealthy", "poor")
+        add_alert("PM2.5", "PM2.5 levels are unhealthy", "warning")
+
+    if data["pm10"] > 50:
+        add_alert("PM10", "PM10 levels are elevated", "warning")
 
     if data["noise"] > 80:
-        add_alert("Noise", "Noise levels are hazardous", "hazardous")
+        add_alert("Noise", "Noise levels are hazardous", "critical")
 
     return alerts
+
+
+# -------------------------------------------------
+# INGEST SENSOR DATA (ESP32 → Backend)
+# -------------------------------------------------
+@router.post("/ingest")
+def ingest_data(data: SensorData):
+    device_id = data.device_id
+    ensure_device_exists(device_id)
+
+    timestamp = datetime.utcnow()
+
+    # ✅ Update in-memory cache (frontend uses this)
+    LATEST_DATA[device_id] = {
+        **data.dict(exclude={"timestamp"}),
+        "timestamp": timestamp.isoformat()
+    }
+
+    # ✅ Persist to SQLite
+    conn = get_db()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        INSERT INTO sensor_readings (
+            device_id,
+            temperature,
+            humidity,
+            pm25,
+            pm10,
+            noise,
+            light,
+            recorded_at
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    """, (
+        device_id,
+        data.temperature,
+        data.humidity,
+        data.pm25,
+        data.pm10,
+        data.noise,
+        data.light,
+        timestamp
+    ))
+
+    conn.commit()
+    conn.close()
+
+    return {
+        "status": "ok",
+        "device_id": device_id,
+        "timestamp": timestamp
+    }

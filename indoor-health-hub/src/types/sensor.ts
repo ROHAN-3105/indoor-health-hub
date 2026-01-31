@@ -7,7 +7,6 @@ export interface SensorData {
   humidity: number;
   pm25: number;
   pm10: number;
-  air_quality: number;
   noise: number;
   light: number;
 }
