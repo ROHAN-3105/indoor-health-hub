@@ -63,6 +63,32 @@ def init_db():
     )
     """)
 
+    # -----------------------------
+    # Users table
+    # -----------------------------
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        username TEXT UNIQUE NOT NULL,
+        password_hash TEXT NOT NULL,
+        created_at DATETIME
+    )
+    """)
+
+    db.commit()
+    
+    # Schema Migration (Manual for now)
+    # Attempt to add columns if they don't exist
+    try:
+        cursor.execute("ALTER TABLE users ADD COLUMN email TEXT")
+    except sqlite3.OperationalError:
+        pass # already exists
+
+    try:
+        cursor.execute("ALTER TABLE users ADD COLUMN full_name TEXT")
+    except sqlite3.OperationalError:
+        pass
+
     db.commit()
     db.close()
 
@@ -94,6 +120,65 @@ def ensure_device_exists(device_id: str):
 
     db.commit()
     db.close()
+
+
+def create_user(username: str, password_hash: str):
+    """
+    Creates a new user
+    """
+    db = get_db()
+    cursor = db.cursor()
+    try:
+        cursor.execute("INSERT INTO users (username, password_hash, created_at) VALUES (?, ?, ?)",
+                      (username, password_hash, datetime.utcnow()))
+        db.commit()
+        user_id = cursor.lastrowid
+        return user_id
+    except sqlite3.IntegrityError:
+        return None
+    finally:
+        db.close()
+
+
+def get_user_by_username(username: str):
+    """
+    Fetch user by username
+    """
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute("SELECT * FROM users WHERE username = ?", (username,))
+    user = cursor.fetchone()
+    db.close()
+    return user
+
+
+def update_user_profile(username: str, email: str, full_name: str):
+    """
+    Update user profile details
+    """
+    db = get_db()
+    cursor = db.cursor()
+    # Handle None values by converting to empty string or keeping None
+    # SQLite handles None as NULL
+    cursor.execute("""
+        UPDATE users
+        SET email = ?, full_name = ?
+        WHERE username = ?
+    """, (email, full_name, username))
+    db.commit()
+    db.close()
+
+
+def get_all_devices():
+    """
+    Returns list of all registered devices
+    """
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute("SELECT * FROM devices")
+    devices = cursor.fetchall()
+    db.close()
+    return [dict(d) for d in devices]
 
 
 # -------------------------------------------------

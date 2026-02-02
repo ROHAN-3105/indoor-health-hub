@@ -1,13 +1,16 @@
 import { motion } from "framer-motion";
-import { Activity, Bell, Settings, User, Menu } from "lucide-react";
+import { Activity, Bell, Settings, User, Menu, LogOut, LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useSensor } from "@/contexts/SensorContext";
-import { NavLink } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 
 export const Header = () => {
   const { alerts } = useSensor();
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
 
   const unreadAlerts = alerts.length;
@@ -62,7 +65,7 @@ export const Header = () => {
           {/* Actions */}
           <div className="flex items-center gap-2">
             {/* Notifications */}
-            <Button variant="ghost" size="icon" className="relative">
+            <Button variant="ghost" size="icon" className="relative" onClick={() => navigate('/dashboard')}>
               <Bell className="w-5 h-5" />
               {unreadAlerts > 0 && (
                 <span className="absolute -top-1 -right-1 w-5 h-5 bg-health-hazardous text-white text-xs font-bold rounded-full flex items-center justify-center animate-pulse">
@@ -71,13 +74,27 @@ export const Header = () => {
               )}
             </Button>
 
-            <Button variant="ghost" size="icon" className="hidden sm:flex">
+            <Button variant="ghost" size="icon" className="hidden sm:flex" onClick={() => navigate('/settings')}>
               <Settings className="w-5 h-5" />
             </Button>
 
-            <Button variant="ghost" size="icon" className="hidden sm:flex">
-              <User className="w-5 h-5" />
-            </Button>
+            {user ? (
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-medium hidden sm:block">
+                  {user.username}
+                </span>
+                <Button variant="ghost" size="icon" onClick={() => {
+                  logout();
+                  navigate('/login');
+                }} title="Logout">
+                  <LogOut className="w-5 h-5" />
+                </Button>
+              </div>
+            ) : (
+              <Button variant="ghost" size="icon" onClick={() => navigate('/login')} title="Login">
+                <LogIn className="w-5 h-5" />
+              </Button>
+            )}
 
             {/* Mobile Menu Toggle */}
             <Button
@@ -127,6 +144,24 @@ export const Header = () => {
               >
                 Settings
               </NavLink>
+              <div className="border-t border-border/50 pt-2 mt-2">
+                {user ? (
+                  <Button variant="ghost" size="sm" className="w-full justify-start" onClick={() => {
+                    logout();
+                    navigate('/login');
+                    setMenuOpen(false);
+                  }}>
+                    <LogOut className="w-4 h-4 mr-2" /> Logout ({user.username})
+                  </Button>
+                ) : (
+                  <Button variant="ghost" size="sm" className="w-full justify-start" onClick={() => {
+                    navigate('/login');
+                    setMenuOpen(false);
+                  }}>
+                    <LogIn className="w-4 h-4 mr-2" /> Login
+                  </Button>
+                )}
+              </div>
             </div>
           </motion.nav>
         )}
@@ -134,3 +169,4 @@ export const Header = () => {
     </motion.header>
   );
 };
+

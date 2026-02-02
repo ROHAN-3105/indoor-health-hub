@@ -150,4 +150,32 @@ def generate_alerts(data: dict):
                 "timestamp": now
             })
 
+    # -----------------------------
+    # Temperature (DHT11/BME680)
+    # -----------------------------
+    temp = data.get("temperature", 22)
+
+    if temp > 30:
+        alert_type = "TEMP_HIGH"
+        if _can_emit(device_id, alert_type):
+            alerts.append({
+                "id": _new_alert_id(alert_type),
+                "severity": "High",
+                "title": "High Temperature",
+                "message": "Room temperature is excessively high (>30°C). Improve cooling.",
+                "sensor": "Temperature Sensor",
+                "timestamp": now
+            })
+    elif temp < 16:
+        alert_type = "TEMP_LOW"
+        if _can_emit(device_id, alert_type):
+            alerts.append({
+                "id": _new_alert_id(alert_type),
+                "severity": "Medium",
+                "title": "Low Temperature",
+                "message": "Room is too cold (<16°C). Check heating.",
+                "sensor": "Temperature Sensor",
+                "timestamp": now
+            })
+
     return alerts

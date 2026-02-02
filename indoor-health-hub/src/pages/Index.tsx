@@ -90,10 +90,10 @@ const Index = () => {
               <a href="#about" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                 About
               </a>
-              <Button variant="outline" size="sm">
+              <Button variant="outline" size="sm" onClick={() => navigate('/login')}>
                 Sign In
               </Button>
-              <Button size="sm" className="gradient-primary text-primary-foreground shadow-glow" onClick={() => navigate('/dashboard')}>
+              <Button size="sm" className="gradient-primary text-primary-foreground shadow-glow" onClick={() => navigate('/login')}>
                 Get Started
               </Button>
             </nav>
@@ -128,7 +128,7 @@ const Index = () => {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="text-lg md:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto"
             >
-              Transform complex environmental data into a single, actionable Indoor Health Score. 
+              Transform complex environmental data into a single, actionable Indoor Health Score.
               Monitor air quality, climate, noise, and light with real-time insights.
             </motion.p>
 
@@ -141,7 +141,7 @@ const Index = () => {
               <Button
                 size="lg"
                 className="gradient-primary text-primary-foreground shadow-glow px-8 gap-2"
-                onClick={() => navigate('/dashboard')}
+                onClick={() => navigate('/login')}
               >
                 View Dashboard
                 <ArrowRight className="w-4 h-4" />
@@ -185,7 +185,7 @@ const Index = () => {
               Comprehensive Indoor Monitoring
             </h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              Our multi-sensor platform aggregates data from ESP32-based IoT devices 
+              Our multi-sensor platform aggregates data from ESP32-based IoT devices
               to provide a complete picture of your indoor environment.
             </p>
           </motion.div>
@@ -226,7 +226,7 @@ const Index = () => {
                 Start Monitoring Your Indoor Health Today
               </h2>
               <p className="text-primary-foreground/80 mb-8 max-w-xl mx-auto">
-                Experience the power of real-time environmental monitoring with our demo mode. 
+                Experience the power of real-time environmental monitoring with our demo mode.
                 No IoT devices required.
               </p>
               <Button
@@ -254,7 +254,7 @@ const Index = () => {
               <span className="font-bold font-display">Monacos</span>
             </div>
             <p className="text-xs text-muted-foreground text-center max-w-lg">
-              <strong>Disclaimer:</strong> This product provides environmental insights and is not a medical device. 
+              <strong>Disclaimer:</strong> This product provides environmental insights and is not a medical device.
               Consult professionals for health concerns.
             </p>
             <div className="flex items-center gap-4 text-sm text-muted-foreground">

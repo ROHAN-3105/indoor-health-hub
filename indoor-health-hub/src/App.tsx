@@ -7,12 +7,16 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import DeviceDetails from "@/pages/DeviceDetails";
 
 import { SensorProvider } from "@/contexts/SensorContext";
+import { AuthProvider } from "@/contexts/AuthContext";
+import Login from "@/pages/Login";
+import Signup from "@/pages/Signup";
 
 /* Pages */
 import Index from "@/pages/Index";
 import Dashboard from "@/pages/Dashboard";
 import Devices from "@/pages/Devices";
 import Analytics from "@/pages/Analytics";
+import Settings from "@/pages/Settings";
 import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -25,27 +29,34 @@ export default function App() {
         <Sonner />
 
         {/* ✅ SensorProvider MUST wrap Router */}
-        <SensorProvider>
-          <BrowserRouter>
-            <Routes>
-              {/* Landing */}
-              <Route path="/" element={<Index />} />
+        <AuthProvider>
+          <SensorProvider>
+            <BrowserRouter>
+              <Routes>
+                {/* Auth */}
+                <Route path="/login" element={<Login />} />
+                <Route path="/signup" element={<Signup />} />
 
-              {/* Core App */}
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/devices" element={<Devices />} />
-              <Route path="/analytics" element={<Analytics />} />
-              <Route path="/devices/:id" element={<DeviceDetails />} />
+                {/* Landing */}
+                <Route path="/" element={<Index />} />
+
+                {/* Core App */}
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/devices" element={<Devices />} />
+                <Route path="/analytics" element={<Analytics />} />
+                <Route path="/devices/:id" element={<DeviceDetails />} />
+                <Route path="/settings" element={<Settings />} />
 
 
-              {/* Future-ready */}
-              {/* <Route path="/devices/:id" element={<DeviceDetails />} /> */}
+                {/* Future-ready */}
+                {/* <Route path="/devices/:id" element={<DeviceDetails />} /> */}
 
-              {/* Fallback */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </BrowserRouter>
-        </SensorProvider>
+                {/* Fallback */}
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </BrowserRouter>
+          </SensorProvider>
+        </AuthProvider>
       </TooltipProvider>
     </QueryClientProvider>
   );

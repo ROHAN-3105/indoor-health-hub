@@ -8,6 +8,9 @@ from recommendation_engine import generate_recommendations
 from aqi_engine import calculate_pm_aqi
 from alerts_engine import generate_alerts
 from health_engine import calculate_health_score
+import auth
+from db import create_user, get_user_by_username, init_db
+from schemas import UserCreate, Token, UserResponse
 
 # ---------------------------
 # APP SETUP
@@ -38,6 +41,87 @@ MAX_HISTORY = 60          # last 60 readings
 ONLINE_TIMEOUT = 30      # seconds
 
 # ---------------------------
+# AUTHENTICATION
+# ---------------------------
+
+@app.on_event("startup")
+def startup_event():
+    init_db()
+
+@app.post("/auth/signup", response_model=UserResponse)
+def signup(user: UserCreate):
+    try:
+        existing_user = get_user_by_username(user.username)
+        if existing_user:
+            raise HTTPException(status_code=400, detail="Username already registered")
+        
+        hashed_password = auth.get_password_hash(user.password)
+        user_id = create_user(user.username, hashed_password)
+        
+        if not user_id:
+            # Check if it was collision that wasn't caught?
+            # Or database error
+            raise HTTPException(status_code=500, detail="Failed to create user (DB Error)")
+            
+        return {
+            "id": user_id,
+            "username": user.username,
+            "created_at": datetime.utcnow()
+        }
+    except Exception as e:
+        print(f"Signup Error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/auth/login", response_model=Token)
+def login(user: UserCreate):
+    db_user = get_user_by_username(user.username)
+    if not db_user:
+        raise HTTPException(status_code=401, detail="Invalid username or password")
+    
+    if not auth.verify_password(user.password, db_user["password_hash"]):
+        raise HTTPException(status_code=401, detail="Invalid username or password")
+    
+    access_token = auth.create_access_token(data={"sub": user.username})
+    access_token = auth.create_access_token(data={"sub": user.username})
+    return {"access_token": access_token, "token_type": "bearer"}
+
+
+from fastapi import Depends
+from fastapi.security import OAuth2PasswordBearer
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
+
+def get_current_user(token: str = Depends(oauth2_scheme)):
+    payload = auth.decode_access_token(token)
+    if not payload:
+        raise HTTPException(status_code=401, detail="Invalid token")
+    username = payload.get("sub")
+    user = get_user_by_username(username)
+    if not user:
+        raise HTTPException(status_code=401, detail="User not found")
+    return user
+
+@app.get("/auth/me")
+def read_users_me(current_user: dict = Depends(get_current_user)):
+    # Convert sqlite row to dict
+    return {
+        "id": current_user["id"],
+        "username": current_user["username"],
+        "email": current_user["email"] if "email" in current_user.keys() else None,
+        "full_name": current_user["full_name"] if "full_name" in current_user.keys() else None,
+        "created_at": current_user["created_at"]
+    }
+
+class UserUpdate(BaseModel):
+    email: str | None = None
+    full_name: str | None = None
+
+@app.put("/auth/me")
+def update_me(payload: UserUpdate, current_user: dict = Depends(get_current_user)):
+    from db import update_user_profile
+    update_user_profile(current_user["username"], payload.email, payload.full_name)
+    return {"status": "updated", "email": payload.email, "full_name": payload.full_name}
+
+# ---------------------------
 # DATA MODEL
 # ---------------------------
 
@@ -61,10 +145,15 @@ class SensorPayload(BaseModel):
 
 @app.post("/api/ingest")
 def ingest(payload: SensorPayload):
+    from db import ensure_device_exists
+    
     timestamp = payload.timestamp or datetime.utcnow()
 
     data = payload.dict()
     data["timestamp"] = timestamp
+
+    # Ensure device is registered in DB
+    ensure_device_exists(payload.device_id)
 
     # latest snapshot
     DEVICE_STATE[payload.device_id] = data
@@ -86,7 +175,9 @@ def ingest(payload: SensorPayload):
 @app.get("/api/latest/{device_id}")
 def get_latest(device_id: str):
     if device_id not in DEVICE_STATE:
-        raise HTTPException(404, "Device offline")
+        # Check DB if it exists but is offline? 
+        # For now, latest data is only in memory.
+        raise HTTPException(404, "Device offline or no recent data")
 
     return DEVICE_STATE[device_id]
 
@@ -122,11 +213,19 @@ def get_alerts(device_id: str):
 
     DEVICE_ALERTS.setdefault(device_id, [])
 
-    existing_ids = {a["id"] for a in DEVICE_ALERTS[device_id]}
+    # Deduplicate by title: Remove old alerts that match the title of new alerts
+    # This ensures we only keep the LATEST alert of a specific type (e.g., "High PM2.5 Pollution")
+    for new_alert in new_alerts:
+        # Remove existing alerts with the same title
+        DEVICE_ALERTS[device_id] = [
+            a for a in DEVICE_ALERTS[device_id] 
+            if a["title"] != new_alert["title"]
+        ]
+        # Append the new one
+        DEVICE_ALERTS[device_id].append(new_alert)
 
-    for alert in new_alerts:
-        if alert["id"] not in existing_ids:
-            DEVICE_ALERTS[device_id].append(alert)
+    # Optional: Keep only last 20 alerts total to prevent unbounded growth if many types exist
+    DEVICE_ALERTS[device_id] = DEVICE_ALERTS[device_id][-20:]
 
     return DEVICE_ALERTS[device_id]
 
@@ -136,25 +235,77 @@ def get_alerts(device_id: str):
 
 @app.get("/api/devices")
 def list_devices():
+    from db import get_all_devices
+    
     now = datetime.utcnow()
     devices = []
+    
+    # helper for safe float conversion
+    def safe_get(d, key):
+        return d.get(key, 0.0)
 
-    for device_id, data in DEVICE_STATE.items():
-        last_seen = data["timestamp"]
+    # Get all persisted devices
+    db_devices = get_all_devices()
+    
+    for db_dev in db_devices:
+        d_id = db_dev["device_id"]
+        
+        # Check if we have live state for this device
+        if d_id in DEVICE_STATE:
+            data = DEVICE_STATE[d_id]
+            last_seen = data["timestamp"]
+            
+            # Normalize to naive UTC if aware (assuming input is UTC)
+            if last_seen and last_seen.tzinfo:
+                last_seen = last_seen.replace(tzinfo=None)
 
-        online = (now - last_seen) < timedelta(seconds=ONLINE_TIMEOUT)
-
-        devices.append({
-            "device_id": device_id,
-            "last_seen": last_seen,
-            "status": "online" if online else "offline",
-            "temperature": data["temperature"],
-            "pm25": data["pm25"],
-            "noise": data["noise"],
-            "light": data["light"],
-        })
+            online = (now - last_seen) < timedelta(seconds=ONLINE_TIMEOUT)
+            
+            devices.append({
+                "device_id": d_id,
+                "last_seen": last_seen,
+                "status": "online" if online else "offline",
+                "temperature": safe_get(data, "temperature"),
+                "pm25": safe_get(data, "pm25"),
+                "noise": safe_get(data, "noise"),
+                "light": safe_get(data, "light"),
+            })
+        else:
+            # Device exists in DB but no in-memory state (restarted server)
+            # Mark as offline with last_seen from DB
+            # DB last_seen might be a string or datetime object depending on SQLite adapter
+            ls = db_dev["last_seen"]
+            if isinstance(ls, str):
+                try:
+                    ls = datetime.fromisoformat(ls)
+                except:
+                    pass
+            
+            if isinstance(ls, datetime) and ls.tzinfo:
+                ls = ls.replace(tzinfo=None)
+            
+            devices.append({
+                "device_id": d_id,
+                "last_seen": ls,
+                "status": "offline",
+                "temperature": 0.0, # default/unknown
+                "pm25": 0.0,
+                "noise": 0.0,
+                "light": 0.0,
+            })
 
     return devices
+
+
+class DeviceCreate(BaseModel):
+    device_id: str
+
+@app.post("/api/devices")
+def add_device(payload: DeviceCreate):
+    from db import ensure_device_exists
+    ensure_device_exists(payload.device_id)
+    return {"status": "created", "device_id": payload.device_id}
+
 
 # ---------------------------
 # RECOMMENDATIONS

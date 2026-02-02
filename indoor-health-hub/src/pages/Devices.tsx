@@ -8,9 +8,11 @@ import {
   Volume2,
   Sun,
   ChevronRight,
+  Plus,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 
 const API_BASE = "http://127.0.0.1:8000/api";
 
@@ -57,22 +59,22 @@ export default function Devices() {
               if (!latestRes.ok) throw new Error();
 
               const latest = await latestRes.json();
-             return {
-  device_id: d.device_id,
-  last_seen: d.last_seen,
-  status: "online" as const,
-  temperature: latest.temperature,
-  pm25: latest.pm25,
-  noise: latest.noise,
-  light: latest.light,
-};
+              return {
+                device_id: d.device_id,
+                last_seen: d.last_seen,
+                status: "online" as const,
+                temperature: latest.temperature,
+                pm25: latest.pm25,
+                noise: latest.noise,
+                light: latest.light,
+              };
 
             } catch {
-             return {
-  device_id: d.device_id,
-  last_seen: d.last_seen,
-  status: "offline" as const,
-};
+              return {
+                device_id: d.device_id,
+                last_seen: d.last_seen,
+                status: "offline" as const,
+              };
 
             }
           })
@@ -96,15 +98,25 @@ export default function Devices() {
     <div className="min-h-screen bg-background">
       <main className="container mx-auto px-4 py-8 space-y-8">
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-        >
-          <h1 className="text-3xl font-bold font-display">Devices</h1>
-          <p className="text-muted-foreground">
-            Live indoor monitoring units connected to Monacos
-          </p>
-        </motion.div>
+        <div className="flex items-center justify-between">
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            <h1 className="text-3xl font-bold font-display">Devices</h1>
+            <p className="text-muted-foreground">
+              Live indoor monitoring units connected to Monacos
+            </p>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+          >
+            <Button className="gradient-primary text-primary-foreground shadow-glow gap-2">
+              <Plus className="w-4 h-4" /> Add Device
+            </Button>
+          </motion.div>
+        </div>
 
         {/* Loading */}
         {loading && (
@@ -123,7 +135,7 @@ export default function Devices() {
 
         {/* Device Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-          {devices.map((d, i) => {
+          {devices.slice(0, 1).map((d, i) => {
             const online = d.status === "online";
 
             return (
