@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
+import { ChatWidget } from "@/components/ChatWidget";
 import DeviceDetails from "@/pages/DeviceDetails";
 
 import { SensorProvider } from "@/contexts/SensorContext";
@@ -28,10 +29,13 @@ export default function App() {
         <Toaster />
         <Sonner />
 
+
         {/* ✅ SensorProvider MUST wrap Router */}
         <AuthProvider>
+
           <SensorProvider>
             <BrowserRouter>
+              <ChatWidget />
               <Routes>
                 {/* Auth */}
                 <Route path="/login" element={<Login />} />

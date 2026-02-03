@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from datetime import datetime, timedelta
@@ -23,6 +24,8 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:8080",
         "http://127.0.0.1:8080",
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -138,6 +141,10 @@ class SensorPayload(BaseModel):
     light: float
 
     timestamp: datetime | None = None
+    
+    # Arduino specific/Optional
+    pressure: float | None = None
+    gas: float | None = None
 
 # ---------------------------
 # INGEST SENSOR DATA
@@ -156,7 +163,9 @@ def ingest(payload: SensorPayload):
     ensure_device_exists(payload.device_id)
 
     # latest snapshot
+    print(f"DEBUG: Ingesting for {payload.device_id}. Data: {data}")
     DEVICE_STATE[payload.device_id] = data
+    print(f"DEBUG: Current DEVICE_STATE keys: {list(DEVICE_STATE.keys())}")
 
     # history buffer
     DEVICE_HISTORY.setdefault(payload.device_id, []).append(data)
@@ -168,18 +177,45 @@ def ingest(payload: SensorPayload):
         "timestamp": timestamp,
     }
 
+@app.post("/data")
+def ingest_arduino(payload: SensorPayload):
+    # Compatibility route for Arduino which uses /data
+    return ingest(payload)
+
 # ---------------------------
 # GET LATEST DATA
 # ---------------------------
 
 @app.get("/api/latest/{device_id}")
 def get_latest(device_id: str):
-    if device_id not in DEVICE_STATE:
-        # Check DB if it exists but is offline? 
-        # For now, latest data is only in memory.
-        raise HTTPException(404, "Device offline or no recent data")
+    print(f"DEBUG: Request for {device_id}. Keys in memory: {list(DEVICE_STATE.keys())}")
+    
+    if device_id in DEVICE_STATE:
+        return DEVICE_STATE[device_id]
 
-    return DEVICE_STATE[device_id]
+    print(f"DEBUG: Memory miss for {device_id}. Checking DB...")
+    from db import get_db
+    conn = get_db()
+    cursor = conn.cursor()
+    
+    # Get latest reading from DB
+    cursor.execute("""
+        SELECT * FROM sensor_readings 
+        WHERE device_id = ? 
+        ORDER BY timestamp DESC 
+        LIMIT 1
+    """, (device_id,))
+    
+    row = cursor.fetchone()
+    conn.close()
+    
+    if row:
+        data = dict(row)
+        # Type conversion if needed (sqlite returns basic types)
+        # Ensure it matches SensorPayload structure roughly for frontend
+        return data
+        
+    raise HTTPException(404, "Device offline or no recent data")
 
 # ---------------------------
 # HISTORY
@@ -330,3 +366,51 @@ def get_aqi(device_id: str):
     data = DEVICE_STATE[device_id]
 
     return calculate_pm_aqi(data["pm25"], data["pm10"])
+
+# ---------------------------
+# AGENT / CHAT
+# ---------------------------
+
+class ChatRequest(BaseModel):
+    message: str
+    device_id: str
+
+@app.post("/api/chat")
+def chat_agent(payload: ChatRequest):
+    from agent_engine import run_agent
+    try:
+        response = run_agent(payload.message, payload.device_id)
+        return {"response": response, "actions_taken": []}
+    except Exception as e:
+        error_msg = str(e)
+        print(f"Agent Error: {error_msg}")
+        
+        # Handle quota exceeded
+        if ("quota" in error_msg.lower() or "resource_exhausted" in error_msg.lower() or 
+            "429" in error_msg or "rate limit" in error_msg.lower()):
+            
+            # Extract wait time if available in error message (simplified)
+            retry_after = "60" 
+            
+            # USER REQUEST: "Show me how to increase the limit for local development"
+            # NOTE: Since the limit is from Google Gemini (Upstream), you cannot increase it locally 
+            # without upgrading your Google Cloud plan.
+            # 
+            # If you wanted to add LOCAL rate limiting (e.g., to prevent spam),
+            # you would use 'slowapi' here. Example:
+            # @limiter.limit("5/minute")
+            # def chat_agent...
+            
+            return JSONResponse(
+                status_code=429,
+                content={
+                    "detail": "AI Provider Quota Exceeded. Please wait before retrying.",
+                    "source": "Google Gemini API (Free Tier)",
+                    "solution": "Retry after the specified duration."
+                },
+                headers={"Retry-After": retry_after}
+            )
+        
+        # Handle other errors with helpful message
+        raise HTTPException(status_code=500, detail=f"Chatbot temporarily unavailable: {error_msg[:100]}")
+
