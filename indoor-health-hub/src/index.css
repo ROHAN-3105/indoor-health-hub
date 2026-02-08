@@ -1,5 +1,5 @@
 /* ✅ Google Fonts MUST be first */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
 /* ✅ Tailwind directives */
 @tailwind base;
@@ -11,65 +11,66 @@
    ========================= */
 @layer base {
   :root {
-    /* Monacos Health-Tech Design System - Dark Theme */
-    --background: 220 25% 6%;
-    --foreground: 210 40% 98%;
+    /* Monacos VIBRANT MIDNIGHT Theme */
+    /* Background: #1F1D2B */
+    --background: 248 19% 14%; 
+    --foreground: 0 0% 98%;
 
-    --card: 220 20% 10%;
-    --card-foreground: 210 40% 98%;
+    /* Card: #252836 */
+    --card: 229 19% 18%;
+    --card-foreground: 0 0% 98%;
 
-    --popover: 220 20% 10%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 229 19% 18%;
+    --popover-foreground: 0 0% 98%;
 
-    --primary: 174 72% 46%;
-    --primary-foreground: 220 25% 6%;
+    /* Primary: Neon Cyan #22D3EE */
+    --primary: 186 82% 53%;
+    --primary-foreground: 248 19% 14%;
 
-    --secondary: 220 20% 16%;
-    --secondary-foreground: 210 40% 98%;
+    /* Secondary: Neon Purple #C084FC */
+    --secondary: 270 95% 75%;
+    --secondary-foreground: 0 0% 98%;
 
-    --muted: 220 18% 14%;
-    --muted-foreground: 215 20% 55%;
+    --muted: 229 19% 22%;
+    --muted-foreground: 229 10% 65%;
 
-    --accent: 174 60% 40%;
-    --accent-foreground: 210 40% 98%;
+    /* Accent: Hot Pink #F472B6 */
+    --accent: 328 86% 70%;
+    --accent-foreground: 0 0% 98%;
 
-    --destructive: 0 72% 51%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 85% 60%;
+    --destructive-foreground: 0 0% 98%;
 
-    --border: 220 18% 18%;
-    --input: 220 18% 18%;
-    --ring: 174 72% 46%;
+    --border: 229 19% 25%;
+    --input: 229 19% 25%;
+    --ring: 186 82% 53%;
 
-    --radius: 0.75rem;
+    --radius: 1.5rem; /* Softer, larger radius */
 
-    /* Health Status Colors */
-    --health-good: 152 69% 45%;
+    /* Health Status Colors (Vibrant) */
+    --health-good: 160 84% 39%;     /* #10B981 */
     --health-moderate: 45 93% 47%;
-    --health-poor: 30 95% 50%;
-    --health-hazardous: 0 72% 51%;
+    --health-poor: 25 95% 50%;
+    --health-hazardous: 340 82% 52%;
 
     /* Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(174 72% 46%) 0%, hsl(190 80% 40%) 100%);
-    --gradient-card: linear-gradient(135deg, hsl(220 20% 12%) 0%, hsl(220 20% 8%) 100%);
-    --gradient-glass: linear-gradient(135deg, hsla(220, 20%, 20%, 0.4) 0%, hsla(220, 20%, 10%, 0.3) 100%);
-    --gradient-health-good: linear-gradient(135deg, hsl(152 69% 45%) 0%, hsl(160 60% 35%) 100%);
-    --gradient-health-moderate: linear-gradient(135deg, hsl(45 93% 47%) 0%, hsl(35 85% 45%) 100%);
-    --gradient-health-poor: linear-gradient(135deg, hsl(30 95% 50%) 0%, hsl(20 90% 45%) 100%);
-    --gradient-health-hazardous: linear-gradient(135deg, hsl(0 72% 51%) 0%, hsl(350 65% 45%) 100%);
-    --gradient-hero: linear-gradient(180deg, hsl(220 25% 6%) 0%, hsl(220 25% 4%) 100%);
-
-    /* Shadows */
-    --shadow-card: 0 4px 24px -4px hsla(0, 0%, 0%, 0.4);
-    --shadow-glow: 0 0 40px -10px hsl(174 72% 46% / 0.3);
-    --shadow-health-good: 0 0 30px -5px hsl(152 69% 45% / 0.4);
-    --shadow-health-moderate: 0 0 30px -5px hsl(45 93% 47% / 0.4);
-    --shadow-health-poor: 0 0 30px -5px hsl(30 95% 50% / 0.4);
-    --shadow-health-hazardous: 0 0 30px -5px hsl(0 72% 51% / 0.4);
+    /* Purple -> Pink */
+    --gradient-purple: linear-gradient(135deg, #B249F8 0%, #FF70AF 100%);
+    /* Cyan -> Blue */
+    --gradient-cyan: linear-gradient(135deg, #2AFADF 0%, #4C83FF 100%);
+    /* Card Gradient (Subtle) */
+    --gradient-card: linear-gradient(180deg, #252836 0%, #1F1D2B 100%);
+    
+    --glow-primary: 0 0 20px -5px rgba(34, 211, 238, 0.5);
+    --glow-purple: 0 0 20px -5px rgba(192, 132, 252, 0.5);
+    
+    /* Animations */
+    --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
   }
 
   .light {
-    --background: 0 0% 98%;
-    --foreground: 220 25% 10%;
+    --background: 0 0% 100%;
+    --foreground: 240 10% 4%;
   }
 }
 
@@ -82,12 +83,14 @@
   }
 
   body {
-    @apply bg-background text-foreground antialiased;
-    font-family: 'Inter', system-ui, sans-serif;
+    @apply bg-background text-foreground antialiased selection:bg-primary/30 selection:text-white;
+    font-family: 'Inter', sans-serif;
+    /* Clean background, no noise */
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Space Grotesk', system-ui, sans-serif;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    letter-spacing: 0.01em;
   }
 }
 
@@ -95,14 +98,59 @@
    UTILITIES
    ========================= */
 @layer utilities {
-  .glass-card {
-    background: var(--gradient-glass);
-    backdrop-filter: blur(20px);
-    border: 1px solid hsl(var(--border) / 0.5);
+  .bg-gradient-purple {
+    background: var(--gradient-purple);
+  }
+  
+  .bg-gradient-cyan {
+    background: var(--gradient-cyan);
   }
 
-  .health-good { color: hsl(var(--health-good)); }
-  .health-moderate { color: hsl(var(--health-moderate)); }
-  .health-poor { color: hsl(var(--health-poor)); }
-  .health-hazardous { color: hsl(var(--health-hazardous)); }
+  .glass-card {
+    background: var(--card); /* Solid but light dark */
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 10px 40px -10px rgba(0,0,0,0.5);
+  }
+  
+  /* Hover effects for interactive cards */
+  .hover-card {
+    transition: transform 0.3s var(--ease-out-expo), box-shadow 0.3s var(--ease-out-expo);
+  }
+  .hover-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px -10px rgba(0,0,0,0.6);
+  }
+
+  .shadow-glow {
+    box-shadow: var(--glow-primary);
+  }
+
+  .text-gradient {
+    background: linear-gradient(to right, #2AFADF, #4C83FF);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .font-display {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+  
+  /* Animation Utilities */
+  .fade-in-up {
+    animation: fadeInUp 0.8s var(--ease-out-expo) forwards;
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  
+  @keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+  }
+  
+  .delay-100 { animation-delay: 100ms; }
+  .delay-200 { animation-delay: 200ms; }
+  .delay-300 { animation-delay: 300ms; }
 }

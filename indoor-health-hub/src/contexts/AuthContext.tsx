@@ -6,6 +6,7 @@ interface User {
     email?: string;
     full_name?: string;
     created_at?: string;
+    avatar?: string;
 }
 
 interface AuthContextType {
@@ -14,6 +15,7 @@ interface AuthContextType {
     login: (username: string, password: string) => Promise<void>;
     signup: (username: string, password: string) => Promise<void>;
     logout: () => void;
+    updateProfile: (data: Partial<User>) => void;
     isLoading: boolean;
 }
 
@@ -31,12 +33,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             });
             if (res.ok) {
                 const profile = await res.json();
-                setUser(profile);
-                localStorage.setItem("user", JSON.stringify(profile));
+                // Merge with local avatar preference if backend doesn't support it yet
+                const localUser = JSON.parse(localStorage.getItem("user") || "{}");
+                const finalProfile = { ...profile, avatar: localUser.avatar || profile.avatar };
+
+                setUser(finalProfile);
+                localStorage.setItem("user", JSON.stringify(finalProfile));
             }
         } catch (e) {
             console.error("Failed to fetch profile", e);
         }
+    };
+
+    const updateProfile = (data: Partial<User>) => {
+        if (!user) return;
+        const updatedUser = { ...user, ...data };
+        setUser(updatedUser);
+        localStorage.setItem("user", JSON.stringify(updatedUser));
+        toast.info("Profile updated locally");
     };
 
     useEffect(() => {
@@ -114,7 +128,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     return (
-        <AuthContext.Provider value={{ user, token, login, signup, logout, isLoading }}>
+        <AuthContext.Provider value={{ user, token, login, signup, logout, updateProfile, isLoading }}>
             {children}
         </AuthContext.Provider>
     );

@@ -1,6 +1,5 @@
 import { motion } from "framer-motion";
 import { useSensor } from "@/contexts/SensorContext";
-import { cn } from "@/lib/utils";
 import { Activity, TrendingUp, Clock } from "lucide-react";
 
 type Level = "Good" | "Moderate" | "Poor" | "Hazardous";
@@ -8,27 +7,27 @@ type Level = "Good" | "Moderate" | "Poor" | "Hazardous";
 const STATUS_CONFIG: Record<Level, {
   label: string;
   className: string;
-  description: string;
+  icon: React.ReactNode;
 }> = {
   Good: {
     label: "Good",
     className: "bg-health-good",
-    description: "Air quality is excellent. No action needed.",
+    icon: <Activity className="w-4 h-4" />,
   },
   Moderate: {
     label: "Moderate",
     className: "bg-health-moderate",
-    description: "Some parameters need attention.",
+    icon: <Activity className="w-4 h-4" />,
   },
   Poor: {
     label: "Poor",
     className: "bg-health-poor",
-    description: "Indoor environment quality is degraded.",
+    icon: <Activity className="w-4 h-4" />,
   },
   Hazardous: {
     label: "Hazardous",
     className: "bg-health-hazardous",
-    description: "Immediate action required for safety.",
+    icon: <Activity className="w-4 h-4" />,
   },
 };
 
@@ -37,77 +36,78 @@ export const HealthScoreCard = () => {
 
   if (loading || !healthScore) {
     return (
-      <div className="rounded-2xl p-6 border border-border/50 bg-muted/20">
-        <p className="text-muted-foreground">Waiting for sensor data…</p>
+      <div className="rounded-[2rem] p-8 border border-border/50 bg-muted/20 animate-pulse h-64">
+        <p className="text-muted-foreground">Loading health score...</p>
       </div>
     );
   }
 
-  const config =
-    healthScore.level && STATUS_CONFIG[healthScore.level]
-      ? STATUS_CONFIG[healthScore.level]
-      : {
-          label: "Unknown",
-          className: "bg-muted",
-          description: "Waiting for sensor data…",
-        };
+  // Fallback if level is undefined or invalid
+  const level = (healthScore.level as Level) || "Moderate";
+  const config = STATUS_CONFIG[level] || STATUS_CONFIG.Moderate;
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="relative rounded-2xl gradient-card p-6 border border-border/50"
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      className="relative overflow-hidden rounded-[2rem] bg-gradient-purple p-8 text-white shadow-xl min-h-[300px]"
     >
-      <div className="flex items-start justify-between mb-6">
-        <div>
-          <h2 className="text-lg font-medium text-muted-foreground">
-            Indoor Health Score
-          </h2>
-          <p className="text-sm text-muted-foreground/70">
-            {config.description}
+      <div className="absolute top-0 right-0 -mt-8 -mr-8 h-64 w-64 rounded-full bg-white/10 blur-3xl pointer-events-none" />
+      <div className="absolute bottom-0 left-0 -mb-8 -ml-8 h-64 w-64 rounded-full bg-black/10 blur-3xl pointer-events-none" />
+
+      <div className="relative z-10 grid gap-8 md:grid-cols-2 items-center h-full">
+        <div className="space-y-6">
+          <div className="flex items-center gap-2">
+            <Activity className="h-5 w-5 text-white/80" />
+            <h2 className="text-lg font-medium text-white/90">Overall Health Score</h2>
+          </div>
+
+          <div className="flex items-baseline gap-2">
+            <span className="text-7xl font-bold tracking-tight font-display">
+              {Math.round(healthScore.score)}
+            </span>
+            <span className="text-xl text-white/60">/ 100</span>
+          </div>
+
+          <div className="inline-flex items-center rounded-full bg-white/20 px-3 py-1 text-sm font-medium text-white backdrop-blur-md">
+            {config.icon}
+            <span className="ml-2">{config.label}</span>
+          </div>
+
+          <p className="text-white/80 leading-relaxed max-w-md">
+            Your environment aligns with <span className="font-semibold text-white">WHO & ASHRAE</span> standards.
+            Maintain these levels for optimal cognitive function.
           </p>
         </div>
-        <Activity className="w-5 h-5 text-muted-foreground" />
-      </div>
 
-      <div className="flex items-center gap-8 mb-6">
-        <div
-          className={cn(
-            "relative w-32 h-32 rounded-full flex items-center justify-center",
-            config.className
-          )}
-        >
-          <div className="absolute inset-2 rounded-full bg-background flex items-center justify-center">
-            <div className="text-center">
-              <span className="text-4xl font-bold">
-                {healthScore.score}
-              </span>
-              <span className="block text-sm text-muted-foreground">
-                /100
-              </span>
+        {/* Decorative Ring Logic */}
+        <div className="hidden md:flex justify-end relative items-center justify-center">
+          <div className="relative w-48 h-48 flex items-center justify-center">
+            <svg className="w-full h-full transform -rotate-90">
+              <circle cx="96" cy="96" r="80" stroke="currentColor" strokeWidth="12" fill="transparent" className="text-white/10" />
+              <circle cx="96" cy="96" r="80" stroke="currentColor" strokeWidth="12" fill="transparent"
+                strokeDasharray={502}
+                strokeDashoffset={502 - (502 * healthScore.score) / 100}
+                className="text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.5)] transition-all duration-1000 ease-out"
+                strokeLinecap="round"
+              />
+            </svg>
+            <div className="absolute text-center">
+              <span className="text-2xl font-bold text-white">{Math.round(healthScore.score)}%</span>
+              <span className="block text-xs text-white/60">Health</span>
             </div>
           </div>
         </div>
+      </div>
 
-        <div className="flex-1 space-y-3">
-          <div
-            className={cn(
-              "inline-flex px-4 py-2 rounded-full text-sm font-semibold text-white",
-              config.className
-            )}
-          >
-            {config.label}
-          </div>
-
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <TrendingUp className="w-4 h-4" />
-            Live calculation
-          </div>
-
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Clock className="w-4 h-4" />
-            Based on latest readings
-          </div>
+      <div className="absolute bottom-6 left-8 flex gap-6 text-sm text-white/60">
+        <div className="flex items-center gap-2">
+          <TrendingUp className="w-4 h-4" />
+          <span>Live Trend</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <Clock className="w-4 h-4" />
+          <span>Real-time</span>
         </div>
       </div>
     </motion.div>

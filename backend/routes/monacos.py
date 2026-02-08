@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException
-from datetime import datetime
+from datetime import datetime, timedelta
 from schemas import SensorData
 from db import get_db, ensure_device_exists
 
@@ -96,6 +96,29 @@ def get_alerts(device_id: str):
 
 
 # -------------------------------------------------
+# HISTORICAL DATA
+# -------------------------------------------------
+@router.get("/history/{device_id}")
+def get_history(device_id: str):
+    conn = get_db()
+    cursor = conn.cursor()
+    
+    # Get data from last 7 days
+    seven_days_ago = datetime.utcnow() - timedelta(days=7)
+    
+    cursor.execute("""
+        SELECT * FROM sensor_readings
+        WHERE device_id = ? AND timestamp >= ?
+        ORDER BY timestamp ASC
+    """, (device_id, seven_days_ago))
+    
+    rows = cursor.fetchall()
+    conn.close()
+    
+    return [dict(row) for row in rows]
+
+
+# -------------------------------------------------
 # INGEST SENSOR DATA (ESP32 → Backend)
 # -------------------------------------------------
 @router.post("/ingest")
@@ -124,7 +147,7 @@ def ingest_data(data: SensorData):
             pm10,
             noise,
             light,
-            recorded_at
+            timestamp
         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     """, (
         device_id,

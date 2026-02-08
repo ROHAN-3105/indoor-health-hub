@@ -20,10 +20,15 @@ interface SensorCardProps {
 }
 
 const statusStyles = {
-  good: "border-health-good bg-health-good/10 text-health-good",
-  moderate:
-    "border-health-moderate bg-health-moderate/10 text-health-moderate",
-  poor: "border-health-poor bg-health-poor/10 text-health-poor",
+  good: "text-health-good",
+  moderate: "text-health-moderate",
+  poor: "text-health-poor",
+};
+
+const bgStyles = {
+  good: "bg-health-good",
+  moderate: "bg-health-moderate",
+  poor: "bg-health-poor",
 };
 
 const formatUpdatedAgo = (timestamp?: string) => {
@@ -52,15 +57,15 @@ export const SensorCard = ({
     [updatedAt]
   );
 
+  const textColor = statusStyles[status] || "text-gray-400";
+  const bgColor = bgStyles[status] || "bg-gray-400";
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.35 }}
-      className={cn(
-        "relative rounded-2xl p-5 border backdrop-blur-xl shadow-lg transition-all",
-        statusStyles[status]
-      )}
+      className="relative rounded-2xl p-5 border border-white/5 bg-[var(--card)] shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
     >
       {/* subtle live pulse */}
       <motion.div
@@ -73,26 +78,28 @@ export const SensorCard = ({
 
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
-        <span className="text-sm font-medium text-muted-foreground">
+        <span className="text-sm font-medium text-gray-400">
           {title}
         </span>
-        <div className="opacity-80">{icon}</div>
+        <div className={cn("p-2 rounded-xl bg-opacity-10", bgColor)}>
+          <div className={cn("h-4 w-4", textColor)}>{icon}</div>
+        </div>
       </div>
 
       {/* Value */}
       <div className="flex items-end gap-2">
-        <span className="text-3xl font-semibold tracking-tight">
+        <span className="text-3xl font-semibold tracking-tight text-white">
           {value ?? "--"}
         </span>
-        <span className="text-sm mb-1 text-muted-foreground">{unit}</span>
+        <span className="text-sm mb-1 text-gray-500">{unit}</span>
       </div>
 
       {/* Footer */}
       <div className="mt-3 flex items-center justify-between text-xs">
-        <span className="capitalize">{status}</span>
+        <span className={cn("capitalize font-medium", textColor)}>● {status}</span>
         {updatedLabel && (
-          <span className="text-muted-foreground">
-            Updated {updatedLabel}
+          <span className="text-gray-500">
+            {updatedLabel}
           </span>
         )}
       </div>

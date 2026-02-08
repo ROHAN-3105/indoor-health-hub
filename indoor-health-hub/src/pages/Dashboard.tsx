@@ -31,34 +31,22 @@ const Dashboard = () => {
             <HealthScoreCard />
 
             {/* AQI (Evidence-based, particulate only) */}
-            <motion.section
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.15 }}
-            >
+            <section className="fade-in-up delay-100">
               <AQICard />
-            </motion.section>
+            </section>
 
             {/* Live Sensor Readings */}
-            <motion.section
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.25 }}
-            >
+            <section className="fade-in-up delay-200">
               <h2 className="text-lg font-semibold mb-4">
                 Live Environmental Readings
               </h2>
               <SensorGrid />
-            </motion.section>
+            </section>
 
             {/* Explainable Health Logic */}
-            <motion.section
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-            >
+            <section className="fade-in-up delay-300">
               <HealthExplainer />
-            </motion.section>
+            </section>
           </div>
 
           {/* ================= SIDEBAR ================= */}

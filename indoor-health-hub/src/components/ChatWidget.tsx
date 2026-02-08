@@ -151,7 +151,13 @@ export const ChatWidget = () => {
                                                 : "bg-muted text-foreground rounded-tl-none"
                                                 }`}
                                         >
-                                            {msg.text}
+                                            {/* Simple Markdown Parser for **Bold** */}
+                                            {msg.text.split(/(\*\*.*?\*\*)/).map((part, index) => {
+                                                if (part.startsWith("**") && part.endsWith("**")) {
+                                                    return <strong key={index}>{part.slice(2, -2)}</strong>;
+                                                }
+                                                return <span key={index}>{part}</span>;
+                                            })}
                                         </div>
                                     </div>
                                 ))}

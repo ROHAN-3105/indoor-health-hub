@@ -7,6 +7,7 @@ export interface AQIResponse {
   components: {
     pm25_aqi?: number;
     pm10_aqi?: number;
+    no2_aqi?: number;
   };
 }
 

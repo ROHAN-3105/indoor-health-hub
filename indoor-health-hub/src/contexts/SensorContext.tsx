@@ -66,8 +66,9 @@ interface SensorContextType {
   aqi: AQIResponse | null;
   alerts: Alert[];
   recommendations: Recommendation[];
-  history: HistoryPoint[];
   loading: boolean;
+  injectSensorData: (data: Partial<SensorData>) => void;
+  historicalData: HistoryPoint[];
 }
 
 const SensorContext = createContext<SensorContextType | undefined>(undefined);
@@ -80,8 +81,47 @@ export const SensorProvider = ({ children }: { children: ReactNode }) => {
   const [aqi, setAqi] = useState<AQIResponse | null>(null);
   const [alerts, setAlerts] = useState<Alert[]>([]);
   const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
-  const [history, setHistory] = useState<HistoryPoint[]>([]);
+  const [historicalData, setHistoricalData] = useState<HistoryPoint[]>([]);
   const [loading, setLoading] = useState(true);
+
+  // Allow external sources (like Bluetooth) to update state
+  const injectSensorData = (data: Partial<SensorData>) => {
+    setLatest((prev) => {
+      const timestamp = new Date().toISOString();
+      const newData = !prev
+        ? {
+          device_id: DEVICE_ID,
+          temperature: 0,
+          humidity: 0,
+          pm25: 0,
+          pm10: 0,
+          air_quality: 0,
+          noise: 0,
+          light: 0,
+          timestamp,
+          ...data,
+        }
+        : { ...prev, ...data, timestamp };
+
+      // Update history with new data point
+      setHistoricalData(prevHist => {
+        const point: HistoryPoint = {
+          temperature: newData.temperature,
+          humidity: newData.humidity,
+          pm25: newData.pm25,
+          pm10: newData.pm10,
+          noise: newData.noise,
+          light: newData.light,
+          air_quality: newData.air_quality,
+          timestamp: newData.timestamp
+        };
+        // Keep last 24 points e.g.
+        return [...prevHist, point].slice(-24);
+      });
+
+      return newData;
+    });
+  };
 
   useEffect(() => {
     let mounted = true;
@@ -92,16 +132,16 @@ export const SensorProvider = ({ children }: { children: ReactNode }) => {
           latestRes,
           healthRes,
           alertsRes,
-          historyRes,
           recsRes,
           aqiData,
+          historyRes // Assuming there is an endpoint or we mock it
         ] = await Promise.all([
           fetch(`${API_BASE}/latest/${DEVICE_ID}`),
           fetch(`${API_BASE}/health-score/${DEVICE_ID}`),
           fetch(`${API_BASE}/alerts/${DEVICE_ID}`),
-          fetch(`${API_BASE}/history/${DEVICE_ID}`),
           fetch(`${API_BASE}/recommendations/${DEVICE_ID}`),
           fetchAQI(DEVICE_ID),
+          fetch(`${API_BASE}/history/${DEVICE_ID}`).catch(() => ({ ok: false, json: async () => [] })) // Fallback
         ]);
 
         if (!mounted) return;
@@ -109,8 +149,9 @@ export const SensorProvider = ({ children }: { children: ReactNode }) => {
         if (latestRes.ok) setLatest(await latestRes.json());
         if (healthRes.ok) setHealthScore(await healthRes.json());
         if (alertsRes.ok) setAlerts(await alertsRes.json());
-        if (historyRes.ok) setHistory(await historyRes.json());
         if (recsRes.ok) setRecommendations(await recsRes.json());
+        // For history, if the endpoint doesn't exist yet, we can rely on injected data or empty
+        if (historyRes.ok) setHistoricalData(await historyRes.json());
 
         setAqi(aqiData);
       } catch (err) {
@@ -137,8 +178,9 @@ export const SensorProvider = ({ children }: { children: ReactNode }) => {
         aqi,
         alerts,
         recommendations,
-        history,
         loading,
+        injectSensorData,
+        historicalData
       }}
     >
       {children}

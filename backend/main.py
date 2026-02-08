@@ -223,7 +223,28 @@ def get_latest(device_id: str):
 
 @app.get("/api/history/{device_id}")
 def get_history(device_id: str):
-    return DEVICE_HISTORY.get(device_id, [])
+    print(f"DEBUG: Fetching history for {device_id} from DB")
+    from db import get_db
+    conn = get_db()
+    cursor = conn.cursor()
+    
+    # Get last 7 days of data
+    # We generated data with timestamp being stored. 
+    # SQLite stores DATETIME as strings usually.
+    seven_days_ago = datetime.utcnow() - timedelta(days=7)
+    
+    cursor.execute("""
+        SELECT * FROM sensor_readings 
+        WHERE device_id = ? AND timestamp >= ? 
+        ORDER BY timestamp ASC
+    """, (device_id, seven_days_ago))
+    
+    rows = cursor.fetchall()
+    conn.close()
+    
+    results = [dict(row) for row in rows]
+    print(f"DEBUG: Found {len(results)} history records for {device_id}")
+    return results
 
 # ---------------------------
 # HEALTH SCORE

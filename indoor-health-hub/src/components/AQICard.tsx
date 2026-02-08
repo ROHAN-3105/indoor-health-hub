@@ -1,101 +1,61 @@
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useSensor } from "@/contexts/SensorContext";
 import { Wind } from "lucide-react";
-import clsx from "clsx";
-
-const aqiStyles: Record<
-  string,
-  { ring: string; badge: string; text: string }
-> = {
-  Good: {
-    ring: "ring-green-500/40",
-    badge: "bg-green-600",
-    text: "Air quality is satisfactory with minimal health risk.",
-  },
-  Moderate: {
-    ring: "ring-yellow-500/40",
-    badge: "bg-yellow-500",
-    text: "Sensitive individuals may experience mild effects.",
-  },
-  Poor: {
-    ring: "ring-orange-500/40",
-    badge: "bg-orange-600",
-    text: "Air quality may affect comfort and breathing.",
-  },
-  Unhealthy: {
-    ring: "ring-red-500/40",
-    badge: "bg-red-600",
-    text: "Increased risk of adverse health effects.",
-  },
-  Hazardous: {
-    ring: "ring-red-800/50",
-    badge: "bg-red-800",
-    text: "Serious health risk. Avoid prolonged exposure.",
-  },
-};
 
 export const AQICard = () => {
   const { aqi, loading } = useSensor();
 
   if (loading || !aqi) {
     return (
-      <Card>
-        <CardContent className="p-6 text-sm text-muted-foreground">
-          Calculating Air Quality Index…
-        </CardContent>
+      <Card className="glass-card h-full flex items-center justify-center p-6">
+        <span className="text-muted-foreground animate-pulse">Loading AQI...</span>
       </Card>
     );
   }
 
-  const style = aqiStyles[aqi.category] ?? aqiStyles.Moderate;
+  // Calculate percentage for progress bar (max 100 for display scaling)
+  const pm25 = aqi.components.pm25_aqi;
+  const percentage = Math.min((pm25 / 200) * 100, 100);
 
   return (
-    <Card
-      className={clsx(
-        "relative overflow-hidden ring-1 transition-all",
-        style.ring
-      )}
-    >
-      {/* Subtle background wash */}
-      <div className="absolute inset-0 bg-gradient-to-br from-muted/20 to-transparent" />
+    <Card className="bg-gradient-cyan border-none text-white shadow-lg overflow-hidden relative min-h-[220px]">
+      {/* Background Blur */}
+      <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-2xl -mr-16 -mt-16 pointer-events-none" />
 
-      <CardContent className="relative p-6 space-y-4">
-        {/* Header */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Wind className="h-5 w-5 text-muted-foreground" />
-            <h3 className="text-lg font-semibold">Air Quality Index</h3>
-          </div>
+      <CardHeader className="pb-2 relative z-10">
+        <CardTitle className="flex items-center gap-2 text-white text-lg">
+          <Wind className="w-5 h-5 text-white/80" /> Air Quality Index (PM2.5)
+        </CardTitle>
+      </CardHeader>
 
-          <Badge className={style.badge}>{aqi.category}</Badge>
-        </div>
-
-        {/* AQI Value */}
-        <div className="flex items-end gap-3">
-          <span className="text-5xl font-bold tracking-tight">
-            {aqi.aqi}
-          </span>
-          <span className="text-sm text-muted-foreground pb-1">
-            AQI
-          </span>
-        </div>
-
-        {/* Interpretation */}
-        <p className="text-sm">{style.text}</p>
-
-        {/* Evidence */}
-        <div className="text-xs text-muted-foreground space-y-1">
-          <div>Basis: {aqi.basis}</div>
+      <CardContent className="relative z-10 flex flex-col justify-end h-[calc(100%-60px)]">
+        <div className="flex items-end justify-between w-full">
           <div>
-            PM2.5 AQI: {aqi.components.pm25_aqi} · PM10 AQI:{" "}
-            {aqi.components.pm10_aqi}
+            <div className="text-5xl font-bold font-display tracking-tight text-white mb-2">
+              {pm25}
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="px-2 py-0.5 rounded-md bg-white/20 text-xs font-bold text-white backdrop-blur-sm">
+                {aqi.category}
+              </span>
+              <span className="text-sm text-white/80">AQI</span>
+            </div>
+          </div>
+
+          <div className="text-right flex flex-col items-end">
+            <div className="h-2 w-32 bg-black/20 rounded-full overflow-hidden mt-2">
+              <div
+                className="h-full bg-white shadow-[0_0_10px_rgba(255,255,255,0.8)] transition-all duration-1000"
+                style={{ width: `${percentage}%` }}
+              />
+            </div>
+            <p className="text-xs text-white/70 mt-2">Target: &lt; 50</p>
           </div>
         </div>
 
-        {/* Trust footer */}
-        <div className="pt-2 text-xs italic text-muted-foreground">
-          Interpretation aligned with WHO & CPCB particulate guidelines
+        <div className="mt-4 pt-4 border-t border-white/10 text-xs text-white/60 flex justify-between">
+          <span>PM10: {aqi.components.pm10_aqi}</span>
+          <span>NO2: {aqi.components.no2_aqi}</span>
         </div>
       </CardContent>
     </Card>

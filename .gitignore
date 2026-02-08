@@ -19,3 +19,12 @@ node_modules/
 
 # OS
 .DS_Store
+
+# Local tools & debug scripts
+.vscode/
+check_schema.py
+debug_data.py
+generate_history.py
+list_models.py
+verify_device.py
+check_import.py

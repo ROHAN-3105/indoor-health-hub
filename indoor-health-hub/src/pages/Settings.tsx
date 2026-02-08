@@ -16,11 +16,12 @@ import { motion } from "framer-motion";
 import { Settings as SettingsIcon, User, Mail, Calendar, Shield, LogOut } from "lucide-react";
 
 const Settings = () => {
-    const { user, logout } = useAuth();
+    const { user, logout, updateProfile } = useAuth();
     const [isEditing, setIsEditing] = React.useState(false);
     const [formData, setFormData] = React.useState({
         full_name: "",
         email: "",
+        avatar: "",
     });
     const [isLoading, setIsLoading] = React.useState(false);
 
@@ -30,6 +31,7 @@ const Settings = () => {
             setFormData({
                 full_name: user.full_name || "",
                 email: user.email || "",
+                avatar: user.avatar || "",
             });
         }
     }, [user]);
@@ -38,18 +40,28 @@ const Settings = () => {
         setIsLoading(true);
         try {
             const storedToken = localStorage.getItem("token");
+            // 1. Try to update backend (Name/Email)
             const res = await fetch("http://localhost:8000/auth/me", {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${storedToken}`
                 },
-                body: JSON.stringify(formData)
+                body: JSON.stringify({
+                    full_name: formData.full_name,
+                    email: formData.email
+                })
+            });
+
+            // 2. Update local context (Avatar + rest)
+            updateProfile({
+                full_name: formData.full_name,
+                email: formData.email,
+                avatar: formData.avatar
             });
 
             if (res.ok) {
-                // Determine current path to force a "soft" reload or just reload page
-                window.location.reload();
+                // Success
             }
         } catch (error) {
             console.error("Failed to update profile", error);
@@ -92,30 +104,55 @@ const Settings = () => {
                         transition={{ delay: 0.1 }}
                         className="space-y-6"
                     >
-                        <div className="glass-card rounded-2xl p-6 text-center space-y-4">
-                            <Avatar className="w-24 h-24 mx-auto border-4 border-primary/20">
-                                <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.username}`} />
+                        <div className="glass-card rounded-2xl p-6 text-center space-y-4 relative overflow-hidden group">
+                            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent pointer-events-none" />
+
+                            <Avatar className="w-24 h-24 mx-auto border-4 border-primary/20 shadow-glow transition-transform duration-500 group-hover:scale-105">
+                                <AvatarImage src={user?.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.username}`} />
                                 <AvatarFallback>{user?.username?.[0]?.toUpperCase()}</AvatarFallback>
                             </Avatar>
                             <div>
-                                <h2 className="text-xl font-bold">{user?.username}</h2>
-                                <p className="text-sm text-muted-foreground">Member</p>
+                                <h2 className="text-xl font-bold font-display">{user?.username}</h2>
+                                <p className="text-sm text-muted-foreground">Premium Member</p>
                             </div>
 
-                            {!isEditing ? (
-                                <Button className="w-full" onClick={() => setIsEditing(true)}>
-                                    Edit Profile
-                                </Button>
-                            ) : (
-                                <div className="flex gap-2">
-                                    <Button variant="outline" className="flex-1" onClick={() => setIsEditing(false)}>Cancel</Button>
-                                    <Button className="flex-1" onClick={handleSave} disabled={isLoading}>
-                                        {isLoading ? "Saving..." : "Save"}
-                                    </Button>
+                            {/* Avatar Selection (Only in Edit Mode) */}
+                            {isEditing && (
+                                <div className="grid grid-cols-4 gap-2 pt-2 pb-4">
+                                    {[1, 2, 3, 4].map((i) => (
+                                        <button
+                                            key={i}
+                                            onClick={() => setFormData({ ...formData, avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.username}${i}` })}
+                                            className="relative rounded-full overflow-hidden hover:ring-2 ring-primary transition-all"
+                                        >
+                                            <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.username}${i}`} alt="Avatar option" />
+                                        </button>
+                                    ))}
                                 </div>
                             )}
 
-                            <Button variant="outline" className="w-full text-destructive hover:text-destructive" onClick={logout}>
+                            {!isEditing ? (
+                                <Button className="w-full gradient-primary shadow-glow hover:opacity-90 active:scale-95 transition-all" onClick={() => setIsEditing(true)}>
+                                    Edit Profile
+                                </Button>
+                            ) : (
+                                <div className="space-y-3">
+                                    <Input
+                                        placeholder="Or paste custom image URL"
+                                        value={formData.avatar}
+                                        onChange={(e) => setFormData({ ...formData, avatar: e.target.value })}
+                                        className="text-xs bg-background/50"
+                                    />
+                                    <div className="flex gap-2">
+                                        <Button variant="outline" className="flex-1" onClick={() => setIsEditing(false)}>Cancel</Button>
+                                        <Button className="flex-1 gradient-primary text-primary-foreground" onClick={handleSave} disabled={isLoading}>
+                                            {isLoading ? "Saving..." : "Save"}
+                                        </Button>
+                                    </div>
+                                </div>
+                            )}
+
+                            <Button variant="ghost" className="w-full text-muted-foreground hover:text-destructive hover:bg-destructive/10" onClick={logout}>
                                 <LogOut className="w-4 h-4 mr-2" /> Sign Out
                             </Button>
                         </div>
