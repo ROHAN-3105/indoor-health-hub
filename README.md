@@ -44,9 +44,14 @@
 
 ### Backend
 - **API**: FastAPI (Python)
+<<<<<<< HEAD
 - **Database**: SQLite (Async/Sync hybrid access)
 - **AI Engine**: LangChain + Google Generative AI (Gemini 2 Flash)
 - **Authentication**: OAuth2 with JWT (JSON Web Tokens)
+=======
+- **Database**: SQLite
+- **AI Engine**: LangChain + Google Generative AI (Gemini 2 flash)
+>>>>>>> 91f8d3abe442806af503a43be5f9a0912c1ced03
 
 ## 📦 Installation & Setup
 
@@ -97,4 +102,3 @@ npm run dev
 
 ---
 
-built with ❤️ by Rohan
