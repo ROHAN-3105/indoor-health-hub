@@ -13,18 +13,25 @@ export const AQICard = () => {
     );
   }
 
-  // Calculate percentage for progress bar (max 100 for display scaling)
-  const pm25 = aqi.components.pm25_aqi;
-  const percentage = Math.min((pm25 / 200) * 100, 100);
+  // Use AQI from sensor data if available, otherwise fallback or 0
+  const aqiValue = loading ? 0 : (aqi?.components?.pm25_aqi ?? 0);
+  // Ideally we use latest?.aqi if we want the one from Arduino, 
+  // but the existing code uses `useSensor().aqi` which comes from `/api/aqi` endpoint.
+  // Since we updated `/api/aqi` to return the stored AQI, `aqi.components.pm25_aqi` 
+  // is actually holding the main AQI value now (see backend change).
+
+  const displayAQI = aqi?.components?.pm25_aqi ?? 0;
+  const category = aqi?.category ?? "Loading...";
+  const percentage = Math.min((displayAQI / 300) * 100, 100);
 
   return (
-    <Card className="bg-gradient-cyan border-none text-white shadow-lg overflow-hidden relative min-h-[220px]">
+    <Card className="bg-gradient-to-br from-cyan-500 to-blue-600 border-none text-white shadow-lg overflow-hidden relative min-h-[220px]">
       {/* Background Blur */}
       <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-2xl -mr-16 -mt-16 pointer-events-none" />
 
       <CardHeader className="pb-2 relative z-10">
         <CardTitle className="flex items-center gap-2 text-white text-lg">
-          <Wind className="w-5 h-5 text-white/80" /> Air Quality Index (PM2.5)
+          <Wind className="w-5 h-5 text-white/80" /> Air Quality Index
         </CardTitle>
       </CardHeader>
 
@@ -32,11 +39,11 @@ export const AQICard = () => {
         <div className="flex items-end justify-between w-full">
           <div>
             <div className="text-5xl font-bold font-display tracking-tight text-white mb-2">
-              {pm25}
+              {displayAQI}
             </div>
             <div className="flex items-center gap-2">
               <span className="px-2 py-0.5 rounded-md bg-white/20 text-xs font-bold text-white backdrop-blur-sm">
-                {aqi.category}
+                {category}
               </span>
               <span className="text-sm text-white/80">AQI</span>
             </div>
@@ -54,8 +61,7 @@ export const AQICard = () => {
         </div>
 
         <div className="mt-4 pt-4 border-t border-white/10 text-xs text-white/60 flex justify-between">
-          <span>PM10: {aqi.components.pm10_aqi}</span>
-          <span>NO2: {aqi.components.no2_aqi}</span>
+          <span>Score: {aqi?.aqi ?? "--"}</span>
         </div>
       </CardContent>
     </Card>

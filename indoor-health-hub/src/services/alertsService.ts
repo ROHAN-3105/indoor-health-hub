@@ -1,6 +1,6 @@
 export async function fetchAlerts(deviceId: string) {
   const res = await fetch(
-    `http://127.0.0.1:8000/api/alerts/${deviceId}`
+    `http://127.0.0.1:8001/api/alerts/${deviceId}`
   );
 
   if (!res.ok) {

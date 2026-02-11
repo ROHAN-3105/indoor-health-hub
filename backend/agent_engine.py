@@ -1,237 +1,201 @@
-from langchain_core.tools import tool
-from datetime import datetime, timedelta
-import pandas as pd
+import google.generativeai as genai
 import os
+import time
+import random
 from dotenv import load_dotenv
-import sqlite3
-# Use absolute import if needed, or relative. Assuming db.py is in same dir.
 from db import get_db
 
-env_path = os.path.join(os.path.dirname(__file__), '.env')
-load_dotenv(env_path)
-from sklearn.linear_model import LinearRegression
-import numpy as np
+# Load env safely
+load_dotenv()
+api_key = os.getenv("GOOGLE_API_KEY")
 
-# Also need access to health_engine
-import health_engine
+if not api_key:
+    # Just a warning, main app handles it
+    print("Warning: GOOGLE_API_KEY not found.")
+else:
+    genai.configure(api_key=api_key)
 
-# --- HELPERS ---
+import math
+from datetime import datetime, timedelta
 
-def get_history_from_db(device_id: str, hours: int = 24):
+def simple_linear_regression(y_values):
     """
-    Fetches historical data from SQLite for the given window.
+    Predicts next 5 values using simple linear regression (y = mx + b).
+    Input: list of y values (ordered by time).
+    Output: list of 5 predicted y values.
     """
+    n = len(y_values)
+    if n < 2:
+        return [y_values[-1]] * 5 if n == 1 else [0] * 5
+
+    x = list(range(n))
+    y = y_values
+
+    sum_x = sum(x)
+    sum_y = sum(y)
+    sum_xy = sum(i * j for i, j in zip(x, y))
+    sum_xx = sum(i * i for i in x)
+
+    # Calculate slope (m) and intercept (b)
+    denominator = n * sum_xx - sum_x * sum_x
+    if denominator == 0:
+        m = 0
+    else:
+        m = (n * sum_xy - sum_x * sum_y) / denominator
+    
+    b = (sum_y - m * sum_x) / n
+
+    # Predict next 5 points (indices n, n+1, n+2, n+3, n+4)
+    predictions = []
+    for i in range(1, 6):
+        next_x = n - 1 + i # Continue x sequence
+        pred_y = m * next_x + b
+        predictions.append(round(pred_y, 1))
+    
+    return predictions
+
+def get_live_context(device_id: str):
+    """Fetches live context AND calculates 5-hour forecast."""
+    context_str = f"Context for Device '{device_id}':\n"
+    
     try:
         conn = get_db()
         cursor = conn.cursor()
         
-        # Calculate time threshold
-        time_threshold = datetime.utcnow() - timedelta(hours=hours)
-        
+        # 1. Get Latest Reading
         cursor.execute("""
             SELECT * FROM sensor_readings 
-            WHERE device_id = ? AND timestamp >= ? 
-            ORDER BY timestamp ASC
-        """, (device_id, time_threshold))
+            WHERE device_id = ? 
+            ORDER BY timestamp DESC 
+            LIMIT 1
+        """, (device_id,))
+        row = cursor.fetchone()
         
-        rows = cursor.fetchall()
+        if row:
+            data = dict(row)
+            context_str += f"[Live Reading] Temp: {data.get('temperature')}C, Humidity: {data.get('humidity')}%, PM2.5: {data.get('pm25')}, AQI: {data.get('aqi')}, Score: {data.get('air_quality_score')}\n"
+        else:
+            context_str += "[Live Reading] No recent data found.\n"
+            conn.close()
+            return context_str
+
+        # 2. Get Historical Data (Last 24 hours) for Prediction
+        # We limit to 50 points to keep it fast/simple
+        cursor.execute("""
+            SELECT temperature, humidity, pm25 FROM sensor_readings 
+            WHERE device_id = ? 
+            ORDER BY timestamp ASC 
+            LIMIT 100
+        """, (device_id,))
+        history = cursor.fetchall()
         conn.close()
-        return [dict(row) for row in rows]
+        
+        if len(history) > 5:
+            temps = [r[0] for r in history if r[0] is not None]
+            hums = [r[1] for r in history if r[1] is not None]
+            pm25s = [r[2] for r in history if r[2] is not None]
+            
+            pred_temp = simple_linear_regression(temps)
+            pred_hum = simple_linear_regression(hums)
+            pred_pm25 = simple_linear_regression(pm25s)
+            
+            context_str += (
+                f"\n[AI Forecast - Next 5 Hours]\n"
+                f"Based on historical trend (Linear Regression):\n"
+                f"- Predicted Temperature: {pred_temp} (Trend)\n"
+                f"- Predicted Humidity: {pred_hum} (Trend)\n"
+                f"- Predicted PM2.5: {pred_pm25} (Trend)\n"
+            )
+        else:
+            context_str += "\n[AI Forecast] Not enough data to predict trends yet.\n"
+            
     except Exception as e:
-        print(f"Error fetching history: {e}")
-        return []
-
-# --- TOOLS ---
-
-@tool
-def get_live_telemetry(device_id: str) -> str:
-    """
-    Fetches the latest data (CO2/PM2.5, Temp, Humidity, VOC/Noise) from the sensor.
-    Returns a string summary of the current state.
-    """
-    try:
-        # Import inside function to avoid circular import at top level
-        # if main imports agent_engine
-        from main import DEVICE_STATE
+        context_str += f"[Error] Could not fetch live data: {e}\n"
         
-        data = DEVICE_STATE.get(device_id)
-        if not data:
-            return "No live data available in memory. Device might be offline."
-        
-        return f"Current Telemetry for {device_id}: {data}"
-    except ImportError:
-        return "Error: Could not access main application state."
-    except Exception as e:
-        return f"Error fetching telemetry: {str(e)}"
+    return context_str
 
-@tool
-def predict_air_trend(device_id: str) -> str:
-    """
-    Runs a prediction model on recent history to forecast air quality (PM2.5) for the next 2 hours.
-    Returns the forecast.
-    """
-    try:
-        # Fetch last 7 days (168 hours) history for better trend analysis
-        history = get_history_from_db(device_id, hours=168)
-        
-        if len(history) < 5:
-            return "Not enough historical data to make a prediction (need at least 5 data points)."
-
-        # Convert to DataFrame
-        df = pd.DataFrame(history)
-        
-        # Parse timestamp if it's a string
-        if 'timestamp' in df.columns and isinstance(df['timestamp'].iloc[0], str):
-            df['timestamp'] = pd.to_datetime(df['timestamp'])
-
-        if 'timestamp' not in df.columns or 'pm25' not in df.columns:
-             return "Data format incorrect for prediction."
-
-        # Sort just in case
-        df = df.sort_values('timestamp')
-
-        # Simple Linear Regression for PM2.5
-        # X = minutes from start, Y = PM2.5
-        min_time = df['timestamp'].min()
-        df['time_delta'] = (df['timestamp'] - min_time).dt.total_seconds() / 60
-        
-        X = df[['time_delta']]
-        y = df['pm25']
-
-        model = LinearRegression()
-        model.fit(X, y)
-
-        # Predict +60 and +120 minutes from last point
-        last_time_delta = df['time_delta'].max()
-        future_times = np.array([[last_time_delta + 60], [last_time_delta + 120]])
-        predictions = model.predict(future_times)
-        
-        # Get last actual value
-        last_val = y.iloc[-1]
-        
-        trend = "Stable"
-        if predictions[1] > last_val * 1.05:
-            trend = "Rising"
-        elif predictions[1] < last_val * 0.95:
-            trend = "Falling"
-
-        return (f"Prediction based on last 48h history ({len(history)} points):\n"
-                f"- Current PM2.5: {last_val:.2f}\n"
-                f"- Forecast +1 hr: {predictions[0]:.2f}\n"
-                f"- Forecast +2 hr: {predictions[1]:.2f}\n"
-                f"- Overall Trend: {trend}")
-
-    except Exception as e:
-        import traceback
-        traceback.print_exc()
-        return f"Prediction failed: {str(e)}"
-
-@tool
-def check_health_standards(device_id: str) -> str:
-    """
-    Compares current room data against WHO and ASHRAE guidelines.
-    Returns a health assessment.
-    """
-    try:
-        from main import DEVICE_STATE
-        data = DEVICE_STATE.get(device_id)
-        if not data:
-            return "No live data available to check health."
-        
-        assessment = health_engine.calculate_health_score(data)
-        return (f"Health Score: {assessment['score']}/100 ({assessment['level']}).\n"
-                f"Issues: {', '.join(assessment['reasons']) if assessment['reasons'] else 'None. Air is clean.'}")
-    except Exception as e:
-        return f"Health check failed: {str(e)}"
-
-@tool
-def manage_hardware(device_id: str, device_type: str, state: str) -> str:
-    """
-    Controls hardware actuators.
-    device_type: 'fan', 'purifier', 'humidifier'
-    state: 'on', 'off', 'auto', 'boost'
-    """
-    print(f"I[HARDWARE CONTROL] Device: {device_id} | Type: {device_type} | State: {state}")
-    return f"Successfully set {device_type} to {state} for device {device_id}."
-
-# --- AGENT SETUP ---
-
-def get_agent_executor():
-    from langchain_google_genai import ChatGoogleGenerativeAI
-    from langchain.agents import AgentExecutor, create_tool_calling_agent
-    from langchain_core.prompts import ChatPromptTemplate
-    
-    # Using gemini-2.0-flash (assuming available)
-    api_key = os.getenv("GOOGLE_API_KEY")
+def run_agent(user_message: str, device_id: str):
     if not api_key:
-        print("CRITICAL: GOOGLE_API_KEY not found in env.")
+        return "System Error: GOOGLE_API_KEY not found in backend configuration."
+
+    context = get_live_context(device_id)
     
-    llm = ChatGoogleGenerativeAI(model="gemini-flash-latest", temperature=0, google_api_key=api_key)
-    tools = [get_live_telemetry, predict_air_trend, check_health_standards, manage_hardware]
-    
-    prompt = ChatPromptTemplate.from_messages([
-        ("system", "You are the Monacos Health Guardian. You check the context provided to answer users."
-                   "You have access to tools for live data, predictions, and hardware control."
-                   "Always be concise, helpful, and data-driven."),
-        ("human", "{input}"),
-        ("placeholder", "{agent_scratchpad}"),
-    ])
-
-    agent = create_tool_calling_agent(llm, tools, prompt)
-    return AgentExecutor(agent=agent, tools=tools, verbose=True)
-
-agent_executor = None
-
-def run_agent(input_text: str, device_id: str):
-    global agent_executor
-    if agent_executor is None:
-        agent_executor = get_agent_executor()
+    system_instruction = (
+        "You are 'Monacos Health Guardian', an AI assistant for indoor air quality. "
+        "You have access to live sensor data AND a 5-hour scientific forecast in the context. "
         
-    # 1. Fetch Context (Live + History Summary)
-    # We inject this into the prompt so the LLM knows the state without tool calling for every basics.
-    
-    context_str = f"Context for Device '{device_id}':\n"
-    
-    # Live Data
-    try:
-        from main import DEVICE_STATE
-        live = DEVICE_STATE.get(device_id)
-        if live:
-            context_str += f"[Live Status] Temp: {live.get('temperature')}C, PM2.5: {live.get('pm25')}, Noise: {live.get('noise')}dB\n"
-        else:
-            context_str += "[Live Status] Device offline or no data.\n"
-    except:
-        context_str += "[Live Status] Unavailable.\n"
+        "CRITICAL RULES FOR RESPONSE:"
+        "1. BE CONCISE. Keep answers under 2-3 sentences unless asked for details."
+        "2. PRECISE DATA. State the values clearly (e.g., 'Temp is 24°C')."
+        "3. NO UNASKED REASONING. Do NOT explain 'Why' or 'How' unless the user asks."
+        "4. FUTURE PREDICTIONS. If asked about the future, use the [AI Forecast] section."
+        "5. SAFETY. If values are hazardous, give a 1-sentence warning."
+        "6. PLAIN TEXT ONLY. Do NOT use markdown (**bold**, etc)."
         
-    # History Summary (Last 7 Days)
-    try:
-        hist = get_history_from_db(device_id, hours=168)
-        if hist:
-            temps = [h['temperature'] for h in hist if h['temperature'] is not None]
-            pm25s = [h['pm25'] for h in hist if h['pm25'] is not None]
-            
-            if temps:
-                avg_temp = sum(temps) / len(temps)
-                max_temp = max(temps)
-                context_str += f"[7-Day History] Avg Temp: {avg_temp:.1f}C, Max Temp: {max_temp:.1f}C.\n"
-            
-            if pm25s:
-                avg_pm = sum(pm25s) / len(pm25s)
-                max_pm = max(pm25s)
-                context_str += f"[7-Day History] Avg PM2.5: {avg_pm:.1f}, Max PM2.5: {max_pm:.1f}.\n"
-        else:
-            context_str += "[7-Day History] No data records.\n"
-    except Exception as e:
-        context_str += f"[7-Day History] Error fetching context: {e}\n"
-
-    final_prompt = f"{context_str}\nUser Query: {input_text}"
+        "Example Interaction:"
+        "User: How is the air?"
+        "Agent: The air quality is Good. PM2.5 is 13.4 µg/m³ and stable."
+    )
     
-    try:
-        print(f"Agent Prompt: {final_prompt}")
-        result = agent_executor.invoke({"input": final_prompt})
-        return result["output"]
-    except Exception as e:
-        print(f"!!! AGENT ERROR: {e}")
-        import traceback
-        traceback.print_exc()
-        raise e
+    final_prompt = f"{context}\n\nUser: {user_message}"
+    
+    # Retry Logic (Exponential Backoff)
+    max_retries = 3
+    base_delay = 2
+    
+    for attempt in range(max_retries):
+        try:
+            model = genai.GenerativeModel(
+                model_name="models/gemini-flash-latest",
+                system_instruction=system_instruction
+            )
+            chat = model.start_chat()
+            response = chat.send_message(final_prompt)
+            return response.text
+            
+        except Exception as e:
+            error_msg = str(e)
+            print(f"Gemini Attempt {attempt+1} failed: {error_msg}")
+            
+            # Check for Quota/Rate Limit
+            if "429" in error_msg or "quota" in error_msg.lower() or "resource_exhausted" in error_msg.lower():
+                if attempt < max_retries - 1:
+                    sleep_time = base_delay * (2 ** attempt) + random.uniform(0, 1)
+                    print(f"Retrying in {sleep_time:.2f}s...")
+                    time.sleep(sleep_time)
+                    continue
+                else:
+                    # Fallback to smart offline mode
+                    import re
+                    
+                    # Parse values
+                    temp_match = re.search(r"Temp: ([\d.]+)C", context)
+                    score_match = re.search(r"Score: ([\d.]+)", context)
+                    aqi_match = re.search(r"AQI: ([\d.]+)", context)
+                    
+                    temp = temp_match.group(1) if temp_match else "Unknown"
+                    score = score_match.group(1) if score_match else "Unknown"
+                    aqi = aqi_match.group(1) if aqi_match else "Unknown"
+                    
+                    msg_lower = user_message.lower()
+                    
+                    # Smart Rule-Based Responses
+                    if "temp" in msg_lower:
+                        return f"Offline Mode: The current temperature is {temp}°C."
+                    elif "score" in msg_lower or "health" in msg_lower:
+                        return f"Offline Mode: Your room health score is {score}/100."
+                    elif "aqi" in msg_lower or "air" in msg_lower:
+                        return f"Offline Mode: The Air Quality Index (AQI) is {aqi}."
+                    elif "hello" in msg_lower or "hi" in msg_lower:
+                        return "Offline Mode: Hello! I'm currently running in low-power mode, but I can still read your sensors. Ask me about temperature or AQI."
+                    else:
+                        return (f"Offline Mode (API Quota)\n\n"
+                                f"I can't chat normally right now, but here are your stats:\n"
+                                f"- Temp: {temp}°C\n"
+                                f"- AQI: {aqi}\n"
+                                f"- Score: {score}/100")
+            else:
+                # Other error
+                return f"I encountered an error: {error_msg}"
+    
+    return "Something went wrong. Please try again."

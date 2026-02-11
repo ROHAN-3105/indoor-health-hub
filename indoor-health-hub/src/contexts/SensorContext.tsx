@@ -7,7 +7,7 @@ import {
 } from "react";
 import { fetchAQI, AQIResponse } from "@/services/aqiService";
 
-const API_BASE = "http://127.0.0.1:8000/api";
+const API_BASE = "http://127.0.0.1:8001/api";
 const DEVICE_ID = "monacos_room_01";
 
 /* ---------- Types ---------- */
@@ -21,6 +21,12 @@ export interface SensorData {
   air_quality: number;
   noise: number;
   light: number;
+  altitude: number;
+  pressure: number;
+  co2: number;
+  vocs: number;
+  aqi: number;
+  air_quality_score: number;
   timestamp: string;
 }
 
@@ -98,6 +104,12 @@ export const SensorProvider = ({ children }: { children: ReactNode }) => {
           air_quality: 0,
           noise: 0,
           light: 0,
+          altitude: 0,
+          pressure: 0,
+          co2: 0,
+          vocs: 0,
+          aqi: 0,
+          air_quality_score: 0,
           timestamp,
           ...data,
         }

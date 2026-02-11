@@ -12,6 +12,7 @@ import {
   ResponsiveContainer,
   CartesianGrid,
 } from "recharts";
+import { Header } from "@/components/Header";
 import { useSensor } from "@/contexts/SensorContext";
 import { cn } from "@/lib/utils";
 import { useState, useEffect } from "react";
@@ -33,7 +34,7 @@ export default function Analytics() {
   useEffect(() => {
     const fetchHistory = async () => {
       try {
-        const res = await fetch("http://127.0.0.1:8000/api/history/monacos_room_01");
+        const res = await fetch("http://127.0.0.1:8001/api/history/monacos_room_01");
         if (res.ok) {
           const data = await res.json();
           setHistory(data);
@@ -80,6 +81,7 @@ export default function Analytics() {
 
   return (
     <div className="min-h-screen bg-background">
+      <Header />
       <main className="container mx-auto px-4 py-8 space-y-12">
         {/* Header */}
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>

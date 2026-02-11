@@ -6,6 +6,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { Logo } from "@/components/ui/Logo";
 
 export const Header = () => {
   const { alerts } = useSensor();
@@ -33,9 +34,7 @@ export const Header = () => {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl gradient-primary flex items-center justify-center shadow-glow">
-              <Activity className="w-5 h-5 text-primary-foreground" />
-            </div>
+            <Logo className="w-10 h-10" />
             <div>
               <h1 className="text-xl font-bold font-display text-gradient">
                 Monacos
@@ -169,4 +168,3 @@ export const Header = () => {
     </motion.header>
   );
 };
-

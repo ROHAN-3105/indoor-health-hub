@@ -10,3 +10,6 @@ langchain-openai
 langchain-google-genai
 scikit-learn
 pandas
+
+bleak
+aiohttp

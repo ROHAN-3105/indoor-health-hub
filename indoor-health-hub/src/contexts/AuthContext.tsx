@@ -26,9 +26,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const [token, setToken] = useState<string | null>(localStorage.getItem("token"));
     const [isLoading, setIsLoading] = useState(true);
 
+    const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8001";
+
     const fetchProfile = async (accessToken: string) => {
         try {
-            const res = await fetch("http://localhost:8000/auth/me", {
+            const res = await fetch(`${API_BASE_URL}/auth/me`, {
                 headers: { Authorization: `Bearer ${accessToken}` }
             });
             if (res.ok) {
@@ -72,7 +74,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const login = async (username: string, password: string) => {
         try {
-            const response = await fetch("http://localhost:8000/auth/login", {
+            const response = await fetch(`${API_BASE_URL}/auth/login`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ username, password }),
@@ -101,7 +103,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const signup = async (username: string, password: string) => {
         try {
-            const response = await fetch("http://localhost:8000/auth/signup", {
+            const response = await fetch(`${API_BASE_URL}/auth/signup`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ username, password }),

@@ -85,6 +85,44 @@ export const SensorGrid = () => {
           status={getStatus(latest?.light ?? null, 300, 700)}
           updatedAt={latest?.timestamp}
         />
+
+        {/* --- NEW SENSORS --- */}
+
+        <SensorCard
+          title="CO2"
+          value={latest?.co2 ?? null}
+          unit="ppm"
+          icon={sensorIcons.co2}
+          status={getStatus(latest?.co2 ?? null, 800, 1200)}
+          updatedAt={latest?.timestamp}
+        />
+
+        <SensorCard
+          title="VOCs"
+          value={latest?.vocs ?? null}
+          unit="ppb"
+          icon={sensorIcons.vocs}
+          status={getStatus(latest?.vocs ?? null, 200, 500)}
+          updatedAt={latest?.timestamp}
+        />
+
+        <SensorCard
+          title="Pressure"
+          value={latest?.pressure ?? null}
+          unit="hPa"
+          icon={sensorIcons.pressure}
+          status="moderate" // pressure usually stable
+          updatedAt={latest?.timestamp}
+        />
+
+        <SensorCard
+          title="Altitude"
+          value={latest?.altitude ?? null}
+          unit="m"
+          icon={sensorIcons.altitude}
+          status="good"
+          updatedAt={latest?.timestamp}
+        />
       </div>
     </section>
   );

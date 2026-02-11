@@ -41,7 +41,8 @@ const Settings = () => {
         try {
             const storedToken = localStorage.getItem("token");
             // 1. Try to update backend (Name/Email)
-            const res = await fetch("http://localhost:8000/auth/me", {
+            const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8001";
+            const res = await fetch(`${API_BASE_URL}/auth/me`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",

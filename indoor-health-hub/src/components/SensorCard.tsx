@@ -7,6 +7,9 @@ import {
   Volume2,
   Sun,
   Activity,
+  Cloud,
+  Gauge,
+  Mountain,
 } from "lucide-react";
 import { useMemo } from "react";
 
@@ -117,4 +120,8 @@ export const sensorIcons = {
   noise: <Volume2 className="w-5 h-5" />,
   light: <Sun className="w-5 h-5" />,
   health: <Activity className="w-5 h-5" />,
+  pressure: <Gauge className="w-5 h-5" />,
+  altitude: <Mountain className="w-5 h-5" />,
+  co2: <Cloud className="w-5 h-5" />,
+  vocs: <Wind className="w-5 h-5" />,
 };

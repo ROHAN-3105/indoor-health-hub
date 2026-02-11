@@ -9,6 +9,7 @@ import { DeviceStatus } from "@/components/DeviceStatus";
 import { Disclaimer, FooterDisclaimer } from "@/components/Disclaimer";
 import { HealthExplainer } from "@/components/HealthExplainer";
 import { AQICard } from "@/components/AQICard";
+import { DashboardChat } from "@/components/DashboardChat";
 
 const Dashboard = () => {
   return (
@@ -79,6 +80,7 @@ const Dashboard = () => {
 
         <FooterDisclaimer />
       </main>
+      <DashboardChat />
     </div>
   );
 };

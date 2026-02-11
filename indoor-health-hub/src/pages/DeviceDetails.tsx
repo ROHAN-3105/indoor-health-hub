@@ -11,8 +11,9 @@ import {
   CartesianGrid,
 } from "recharts";
 import { cn } from "@/lib/utils";
+import { Header } from "@/components/Header";
 
-const API_BASE = "http://127.0.0.1:8000/api";
+const API_BASE = "http://127.0.0.1:8001/api";
 
 export default function DeviceDetails() {
   const { id } = useParams();
@@ -50,6 +51,7 @@ export default function DeviceDetails() {
 
   return (
     <div className="min-h-screen bg-background">
+      <Header />
       <main className="container mx-auto px-4 py-8 space-y-8">
         {/* Header */}
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>

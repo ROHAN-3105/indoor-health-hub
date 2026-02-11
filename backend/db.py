@@ -44,6 +44,12 @@ def init_db():
         pm10 REAL,
         noise REAL,
         light REAL,
+        altitude REAL,
+        pressure REAL,
+        co2 REAL,
+        vocs REAL,
+        aqi REAL,
+        air_quality_score REAL,
         timestamp DATETIME
     )
     """)
@@ -88,6 +94,14 @@ def init_db():
         cursor.execute("ALTER TABLE users ADD COLUMN full_name TEXT")
     except sqlite3.OperationalError:
         pass
+
+    # Migration for new sensor fields
+    new_cols = ["altitude", "pressure", "co2", "vocs", "aqi", "air_quality_score"]
+    for col in new_cols:
+        try:
+            cursor.execute(f"ALTER TABLE sensor_readings ADD COLUMN {col} REAL")
+        except sqlite3.OperationalError:
+            pass
 
     db.commit()
     db.close()

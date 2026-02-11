@@ -36,9 +36,7 @@ app.add_middleware(
 # IN-MEMORY STORAGE
 # ---------------------------
 
-DEVICE_STATE: Dict[str, dict] = {}
-DEVICE_HISTORY: Dict[str, List[dict]] = {}
-DEVICE_ALERTS: Dict[str, List[dict]] = {}
+from shared_state import DEVICE_STATE, DEVICE_HISTORY, DEVICE_ALERTS
 
 MAX_HISTORY = 60          # last 60 readings
 ONLINE_TIMEOUT = 30      # seconds
@@ -85,9 +83,7 @@ def login(user: UserCreate):
         raise HTTPException(status_code=401, detail="Invalid username or password")
     
     access_token = auth.create_access_token(data={"sub": user.username})
-    access_token = auth.create_access_token(data={"sub": user.username})
     return {"access_token": access_token, "token_type": "bearer"}
-
 
 from fastapi import Depends
 from fastapi.security import OAuth2PasswordBearer
@@ -142,8 +138,15 @@ class SensorPayload(BaseModel):
 
     timestamp: datetime | None = None
     
-    # Arduino specific/Optional
+    # New Standard Fields
+    altitude: float | None = None
     pressure: float | None = None
+    co2: float | None = None
+    vocs: float | None = None
+    aqi: float | None = None
+    air_quality_score: float | None = None
+
+    # Arduino specific/Optional (Legacy or specific)
     gas: float | None = None
 
 # ---------------------------
@@ -349,6 +352,7 @@ def list_devices():
                 "pm25": 0.0,
                 "noise": 0.0,
                 "light": 0.0,
+                "time": str(ls) # For debugging/display
             })
 
     return devices
@@ -385,8 +389,37 @@ def get_aqi(device_id: str):
         raise HTTPException(404, "Device offline")
 
     data = DEVICE_STATE[device_id]
+    
+    # Return the AQI directly from the sensor data
+    # Structure match for frontend: { "aqi": <val>, "category": <str>, "components": {...} }
+    # Since user sends just "aqi", we wrap it to match what frontend expects roughly,
+    # OR we rely on frontend checking 'aqi' field in 'latest' data.
+    # But existing frontend calls /api/aqi separately. 
+    
+    # FIX: Handle None values safely
+    aqi_val = data.get("aqi")
+    if aqi_val is None:
+        aqi_val = 0
+    
+    # Simple categorization for display if not provided
+    category = "Good"
+    if aqi_val > 50: category = "Moderate"
+    if aqi_val > 100: category = "Unhealthy for Sensitive Groups"
+    if aqi_val > 150: category = "Unhealthy"
+    if aqi_val > 200: category = "Very Unhealthy"
+    if aqi_val > 300: category = "Hazardous"
 
-    return calculate_pm_aqi(data["pm25"], data["pm10"])
+    return {
+        "aqi": aqi_val,
+        "category": category,
+        "components": {
+            "pm25_aqi": aqi_val, # Proxying for now as main driver
+            "pm10_aqi": 0,       # Not calculated separately
+            "no2_aqi": 0,
+            "o3_aqi": 0,
+            "co_aqi": 0
+        }
+    }
 
 # ---------------------------
 # AGENT / CHAT

@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { Header } from "@/components/Header";
 import { useEffect, useState } from "react";
 import {
   Wifi,
@@ -17,7 +18,7 @@ import { Button } from "@/components/ui/button";
 import { useSensor } from "@/contexts/SensorContext";
 import { useToast } from "@/components/ui/use-toast";
 
-const API_BASE = "http://127.0.0.1:8000/api";
+const API_BASE = "http://127.0.0.1:8001/api";
 
 /* ---------------- Types ---------------- */
 
@@ -177,6 +178,7 @@ export default function Devices() {
 
   return (
     <div className="min-h-screen bg-background">
+      <Header />
       <main className="container mx-auto px-4 py-8 space-y-8">
         {/* Header */}
         <div className="flex items-center justify-between">

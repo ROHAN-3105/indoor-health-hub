@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { Logo } from "@/components/ui/Logo";
 import {
   Activity,
   Wind,
@@ -76,9 +77,7 @@ const Index = () => {
           {/* Header */}
           <header className="flex items-center justify-between py-6">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl gradient-primary flex items-center justify-center shadow-glow">
-                <Activity className="w-5 h-5 text-primary-foreground" />
-              </div>
+              <Logo className="w-10 h-10" />
               <span className="text-xl font-bold font-display text-gradient-primary">
                 Monacos
               </span>

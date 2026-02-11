@@ -1,4 +1,3 @@
-
 # Monacos - Indoor Health Intelligence Hub
 
 ![Status](https://img.shields.io/badge/Status-Active-success)
@@ -11,13 +10,19 @@
 ### 📊 Real-Time Dashboard
 - **Live Monitoring**: Visualize critical metrics including Temperature, Humidity, PM2.5, PM10, Noise, and Light levels.
 - **Health Score**: An aggregated 0-100 health score algorithm based on WHO and ASHRAE standards.
-- **Smart Alerts**: Instant notifications for hazardous conditions (e.g., High CO2, Poor Air Quality).
+- **Smart Alerts**: Instant notifications for hazardous conditions (e.g., High CO2, Poor Air Quality) with debounce logic.
 
 ### 🤖 AI Health Guardian (Chatbot)
 - **Powered by Google Gemini**: Uses the latest Flash model for fast, accurate responses.
 - **Context-Aware**: The bot has access to **7 days of historical data**, allowing it to analyze trends and provide personalized advice.
-- **Predictive Capabilities**: Ask "What will the temperature be in 2 hours?" to get AI-driven forecasts.
+- **Predictive Capabilities**: Ask "What will the temperature be in 2 hours?" to get AI-driven forecasts using linear regression.
 - **Hardware Control**: The AI can suggest or even simulate controlling devices like purifiers and fans.
+- **Rate Limit Handling**: Gracefully handles API quotas with helpful user feedback.
+
+### 🔐 User Authentication & Profiles
+- **Secure Access**: JWT-based Login and Signup functionality to protect your data.
+- **Profile Management**: Customize your experience with avatar selection (Dicebear integration) and personal details.
+- **Member Dashboard**: View "Member Since" status and manage account settings.
 
 ### 📡 Bluetooth Connectivity
 - **Web Bluetooth Integration**: Connect directly to your ESP32 sensor hub from the browser.
@@ -26,7 +31,7 @@
 
 ### 📈 Advanced Analytics
 - **Historical Trends**: View data over the last 24 hours or 7 days with interactive charts.
-- **Device Management**: Add, name, and manage multiple sensor units (e.g., "Living Room", "Bedroom").
+- **Device Management**: Add, name, and manage multiple sensor units (e.g., "Living Room", "Bedroom") maintained in a persistent database.
 
 ## 🛠️ Technology Stack
 
@@ -35,11 +40,13 @@
 - **Styling**: TailwindCSS, Shadcn UI
 - **Animations**: Framer Motion
 - **Visualization**: Recharts
+- **State Management**: Context API
 
 ### Backend
 - **API**: FastAPI (Python)
-- **Database**: SQLite
-- **AI Engine**: LangChain + Google Generative AI (Gemini)
+- **Database**: SQLite (Async/Sync hybrid access)
+- **AI Engine**: LangChain + Google Generative AI (Gemini 2 Flash)
+- **Authentication**: OAuth2 with JWT (JSON Web Tokens)
 
 ## 📦 Installation & Setup
 
@@ -76,14 +83,17 @@ npm run dev
 
 ## 📱 Usage Guide
 
-1. **Dashboard**: Open `http://localhost:8080`.
-2. **Connect Device**:
+1. **Dashboard Access**: Open `http://localhost:8080`.
+2. **Sign Up / Login**: Create an account to access the full dashboard and personalized settings.
+3. **Connect Device**:
     - Go to the **Devices** page.
     - Click **Connect Bluetooth**.
     - Select your **Monacos_Hub** device.
-3. **Ask the AI**:
+4. **Ask the AI**:
     - Click the chat icon in the bottom right.
     - Try asking: *"How has the air quality been this week?"* or *"Predict the temperature trend."*
+5. **Manage Profile**:
+    - Click your avatar in the top right or go to **Settings** to update your profile or sign out.
 
 ---
 
