@@ -39,7 +39,7 @@
 ### Backend
 - **API**: FastAPI (Python)
 - **Database**: SQLite
-- **AI Engine**: LangChain + Google Generative AI (Gemini)
+- **AI Engine**: LangChain + Google Generative AI (Gemini 2 flash)
 
 ## 📦 Installation & Setup
 
