@@ -1,0 +1,881 @@
+[2026-02-10 19:50:30.698412] !!! AGENT ERROR: 429 Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details.
+Traceback (most recent call last):
+  File "C:\Users\rohan\OneDrive\Desktop\Final projec hackathon\indoor-health-hub\backend\agent_engine.py", line 236, in run_agent
+    response = chat.send_message(final_prompt)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\generativeai\generative_models.py", line 591, in send_message
+    self.history, content, response = self._handle_afc(
+                                      ^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\generativeai\generative_models.py", line 657, in _handle_afc
+    response = self.model.generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\generativeai\generative_models.py", line 331, in generate_content
+    response = self._client.generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\ai\generativelanguage_v1beta\services\generative_service\client.py", line 827, in generate_content
+    response = rpc(
+               ^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\gapic_v1\method.py", line 131, in __call__
+    return wrapped_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_unary.py", line 294, in retry_wrapped_func
+    return retry_target(
+           ^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_unary.py", line 156, in retry_target
+    next_sleep = _retry_error_helper(
+                 ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_base.py", line 214, in _retry_error_helper
+    raise final_exc from source_exc
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_unary.py", line 147, in retry_target
+    result = target()
+             ^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\timeout.py", line 130, in func_with_timeout
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\grpc_helpers.py", line 77, in error_remapped_callable
+    raise exceptions.from_grpc_error(exc) from exc
+google.api_core.exceptions.ResourceExhausted: 429 Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details.
+
+[2026-02-10 19:51:03.161328] !!! AGENT ERROR: 429 Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details.
+Traceback (most recent call last):
+  File "C:\Users\rohan\OneDrive\Desktop\Final projec hackathon\indoor-health-hub\backend\agent_engine.py", line 236, in run_agent
+    response = chat.send_message(final_prompt)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\generativeai\generative_models.py", line 578, in send_message
+    response = self.model.generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\generativeai\generative_models.py", line 331, in generate_content
+    response = self._client.generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\ai\generativelanguage_v1beta\services\generative_service\client.py", line 827, in generate_content
+    response = rpc(
+               ^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\gapic_v1\method.py", line 131, in __call__
+    return wrapped_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_unary.py", line 294, in retry_wrapped_func
+    return retry_target(
+           ^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_unary.py", line 156, in retry_target
+    next_sleep = _retry_error_helper(
+                 ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_base.py", line 214, in _retry_error_helper
+    raise final_exc from source_exc
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_unary.py", line 147, in retry_target
+    result = target()
+             ^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\timeout.py", line 130, in func_with_timeout
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\grpc_helpers.py", line 77, in error_remapped_callable
+    raise exceptions.from_grpc_error(exc) from exc
+google.api_core.exceptions.ResourceExhausted: 429 Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details.
+
+[2026-02-10 19:55:14.476861] !!! AGENT ERROR: 429 Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details.
+Traceback (most recent call last):
+  File "C:\Users\rohan\OneDrive\Desktop\Final projec hackathon\indoor-health-hub\backend\agent_engine.py", line 236, in run_agent
+    response = chat.send_message(final_prompt)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\generativeai\generative_models.py", line 578, in send_message
+    response = self.model.generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\generativeai\generative_models.py", line 331, in generate_content
+    response = self._client.generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\ai\generativelanguage_v1beta\services\generative_service\client.py", line 827, in generate_content
+    response = rpc(
+               ^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\gapic_v1\method.py", line 131, in __call__
+    return wrapped_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_unary.py", line 294, in retry_wrapped_func
+    return retry_target(
+           ^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_unary.py", line 156, in retry_target
+    next_sleep = _retry_error_helper(
+                 ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_base.py", line 214, in _retry_error_helper
+    raise final_exc from source_exc
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_unary.py", line 147, in retry_target
+    result = target()
+             ^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\timeout.py", line 130, in func_with_timeout
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\grpc_helpers.py", line 77, in error_remapped_callable
+    raise exceptions.from_grpc_error(exc) from exc
+google.api_core.exceptions.ResourceExhausted: 429 Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details.
+
+[2026-02-10 19:55:23.494712] !!! AGENT ERROR: 429 Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details.
+Traceback (most recent call last):
+  File "C:\Users\rohan\OneDrive\Desktop\Final projec hackathon\indoor-health-hub\backend\agent_engine.py", line 236, in run_agent
+    response = chat.send_message(final_prompt)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\generativeai\generative_models.py", line 578, in send_message
+    response = self.model.generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\generativeai\generative_models.py", line 331, in generate_content
+    response = self._client.generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\ai\generativelanguage_v1beta\services\generative_service\client.py", line 827, in generate_content
+    response = rpc(
+               ^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\gapic_v1\method.py", line 131, in __call__
+    return wrapped_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_unary.py", line 294, in retry_wrapped_func
+    return retry_target(
+           ^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_unary.py", line 156, in retry_target
+    next_sleep = _retry_error_helper(
+                 ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_base.py", line 214, in _retry_error_helper
+    raise final_exc from source_exc
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_unary.py", line 147, in retry_target
+    result = target()
+             ^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\timeout.py", line 130, in func_with_timeout
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\grpc_helpers.py", line 77, in error_remapped_callable
+    raise exceptions.from_grpc_error(exc) from exc
+google.api_core.exceptions.ResourceExhausted: 429 Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details.
+
+[2026-02-10 20:01:46.638667] !!! AGENT ERROR: 429 Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details.
+Traceback (most recent call last):
+  File "C:\Users\rohan\OneDrive\Desktop\Final projec hackathon\indoor-health-hub\backend\agent_engine.py", line 236, in run_agent
+    response = chat.send_message(final_prompt)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\generativeai\generative_models.py", line 578, in send_message
+    response = self.model.generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\generativeai\generative_models.py", line 331, in generate_content
+    response = self._client.generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\ai\generativelanguage_v1beta\services\generative_service\client.py", line 827, in generate_content
+    response = rpc(
+               ^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\gapic_v1\method.py", line 131, in __call__
+    return wrapped_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_unary.py", line 294, in retry_wrapped_func
+    return retry_target(
+           ^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_unary.py", line 156, in retry_target
+    next_sleep = _retry_error_helper(
+                 ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_base.py", line 214, in _retry_error_helper
+    raise final_exc from source_exc
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_unary.py", line 147, in retry_target
+    result = target()
+             ^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\timeout.py", line 130, in func_with_timeout
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\grpc_helpers.py", line 77, in error_remapped_callable
+    raise exceptions.from_grpc_error(exc) from exc
+google.api_core.exceptions.ResourceExhausted: 429 Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details.
+
+[2026-02-10 20:11:41.970775] !!! AGENT ERROR: 429 Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details.
+Traceback (most recent call last):
+  File "C:\Users\rohan\OneDrive\Desktop\Final projec hackathon\indoor-health-hub\backend\agent_engine.py", line 236, in run_agent
+    response = chat.send_message(final_prompt)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\generativeai\generative_models.py", line 578, in send_message
+    response = self.model.generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\generativeai\generative_models.py", line 331, in generate_content
+    response = self._client.generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\ai\generativelanguage_v1beta\services\generative_service\client.py", line 827, in generate_content
+    response = rpc(
+               ^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\gapic_v1\method.py", line 131, in __call__
+    return wrapped_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_unary.py", line 294, in retry_wrapped_func
+    return retry_target(
+           ^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_unary.py", line 156, in retry_target
+    next_sleep = _retry_error_helper(
+                 ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_base.py", line 214, in _retry_error_helper
+    raise final_exc from source_exc
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_unary.py", line 147, in retry_target
+    result = target()
+             ^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\timeout.py", line 130, in func_with_timeout
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\grpc_helpers.py", line 77, in error_remapped_callable
+    raise exceptions.from_grpc_error(exc) from exc
+google.api_core.exceptions.ResourceExhausted: 429 Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details.
+
+[2026-02-10 20:17:22.969299] !!! AGENT ERROR: 429 Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details.
+Traceback (most recent call last):
+  File "C:\Users\rohan\OneDrive\Desktop\Final projec hackathon\indoor-health-hub\backend\agent_engine.py", line 236, in run_agent
+    )
+      
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\generativeai\generative_models.py", line 578, in send_message
+    response = self.model.generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\generativeai\generative_models.py", line 331, in generate_content
+    response = self._client.generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\ai\generativelanguage_v1beta\services\generative_service\client.py", line 827, in generate_content
+    response = rpc(
+               ^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\gapic_v1\method.py", line 131, in __call__
+    return wrapped_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_unary.py", line 294, in retry_wrapped_func
+    return retry_target(
+           ^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_unary.py", line 156, in retry_target
+    next_sleep = _retry_error_helper(
+                 ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_base.py", line 214, in _retry_error_helper
+    raise final_exc from source_exc
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_unary.py", line 147, in retry_target
+    result = target()
+             ^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\timeout.py", line 130, in func_with_timeout
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\grpc_helpers.py", line 77, in error_remapped_callable
+    raise exceptions.from_grpc_error(exc) from exc
+google.api_core.exceptions.ResourceExhausted: 429 Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details.
+
+[2026-02-10 20:17:23.883321] !!! AGENT ERROR: 429 Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details.
+Traceback (most recent call last):
+  File "C:\Users\rohan\OneDrive\Desktop\Final projec hackathon\indoor-health-hub\backend\agent_engine.py", line 236, in run_agent
+    )
+      
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\generativeai\generative_models.py", line 578, in send_message
+    response = self.model.generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\generativeai\generative_models.py", line 331, in generate_content
+    response = self._client.generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\ai\generativelanguage_v1beta\services\generative_service\client.py", line 827, in generate_content
+    response = rpc(
+               ^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\gapic_v1\method.py", line 131, in __call__
+    return wrapped_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_unary.py", line 294, in retry_wrapped_func
+    return retry_target(
+           ^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_unary.py", line 156, in retry_target
+    next_sleep = _retry_error_helper(
+                 ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_base.py", line 214, in _retry_error_helper
+    raise final_exc from source_exc
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_unary.py", line 147, in retry_target
+    result = target()
+             ^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\timeout.py", line 130, in func_with_timeout
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\grpc_helpers.py", line 77, in error_remapped_callable
+    raise exceptions.from_grpc_error(exc) from exc
+google.api_core.exceptions.ResourceExhausted: 429 Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details.
+
+[2026-02-10 20:17:23.926676] !!! AGENT ERROR: 429 Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details.
+Traceback (most recent call last):
+  File "C:\Users\rohan\OneDrive\Desktop\Final projec hackathon\indoor-health-hub\backend\agent_engine.py", line 236, in run_agent
+    )
+      
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\generativeai\generative_models.py", line 578, in send_message
+    response = self.model.generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\generativeai\generative_models.py", line 331, in generate_content
+    response = self._client.generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\ai\generativelanguage_v1beta\services\generative_service\client.py", line 827, in generate_content
+    response = rpc(
+               ^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\gapic_v1\method.py", line 131, in __call__
+    return wrapped_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_unary.py", line 294, in retry_wrapped_func
+    return retry_target(
+           ^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_unary.py", line 156, in retry_target
+    next_sleep = _retry_error_helper(
+                 ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_base.py", line 214, in _retry_error_helper
+    raise final_exc from source_exc
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_unary.py", line 147, in retry_target
+    result = target()
+             ^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\timeout.py", line 130, in func_with_timeout
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\grpc_helpers.py", line 77, in error_remapped_callable
+    raise exceptions.from_grpc_error(exc) from exc
+google.api_core.exceptions.ResourceExhausted: 429 Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details.
+
+[2026-02-10 20:17:24.244142] !!! AGENT ERROR: 429 Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details.
+Traceback (most recent call last):
+  File "C:\Users\rohan\OneDrive\Desktop\Final projec hackathon\indoor-health-hub\backend\agent_engine.py", line 236, in run_agent
+    )
+      
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\generativeai\generative_models.py", line 578, in send_message
+    response = self.model.generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\generativeai\generative_models.py", line 331, in generate_content
+    response = self._client.generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\ai\generativelanguage_v1beta\services\generative_service\client.py", line 827, in generate_content
+    response = rpc(
+               ^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\gapic_v1\method.py", line 131, in __call__
+    return wrapped_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_unary.py", line 294, in retry_wrapped_func
+    return retry_target(
+           ^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_unary.py", line 156, in retry_target
+    next_sleep = _retry_error_helper(
+                 ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_base.py", line 214, in _retry_error_helper
+    raise final_exc from source_exc
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_unary.py", line 147, in retry_target
+    result = target()
+             ^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\timeout.py", line 130, in func_with_timeout
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\grpc_helpers.py", line 77, in error_remapped_callable
+    raise exceptions.from_grpc_error(exc) from exc
+google.api_core.exceptions.ResourceExhausted: 429 Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details.
+
+[2026-02-10 20:18:45.301808] !!! AGENT ERROR: 429 Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details.
+Traceback (most recent call last):
+  File "C:\Users\rohan\OneDrive\Desktop\Final projec hackathon\indoor-health-hub\backend\agent_engine.py", line 236, in run_agent
+    )
+      
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\generativeai\generative_models.py", line 578, in send_message
+    response = self.model.generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\generativeai\generative_models.py", line 331, in generate_content
+    response = self._client.generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\ai\generativelanguage_v1beta\services\generative_service\client.py", line 827, in generate_content
+    response = rpc(
+               ^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\gapic_v1\method.py", line 131, in __call__
+    return wrapped_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_unary.py", line 294, in retry_wrapped_func
+    return retry_target(
+           ^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_unary.py", line 156, in retry_target
+    next_sleep = _retry_error_helper(
+                 ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_base.py", line 214, in _retry_error_helper
+    raise final_exc from source_exc
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_unary.py", line 147, in retry_target
+    result = target()
+             ^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\timeout.py", line 130, in func_with_timeout
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\grpc_helpers.py", line 77, in error_remapped_callable
+    raise exceptions.from_grpc_error(exc) from exc
+google.api_core.exceptions.ResourceExhausted: 429 Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details.
+
+[2026-02-10 20:18:45.900512] !!! AGENT ERROR: 429 Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details.
+Traceback (most recent call last):
+  File "C:\Users\rohan\OneDrive\Desktop\Final projec hackathon\indoor-health-hub\backend\agent_engine.py", line 236, in run_agent
+    )
+      
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\generativeai\generative_models.py", line 578, in send_message
+    response = self.model.generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\generativeai\generative_models.py", line 331, in generate_content
+    response = self._client.generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\ai\generativelanguage_v1beta\services\generative_service\client.py", line 827, in generate_content
+    response = rpc(
+               ^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\gapic_v1\method.py", line 131, in __call__
+    return wrapped_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_unary.py", line 294, in retry_wrapped_func
+    return retry_target(
+           ^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_unary.py", line 156, in retry_target
+    next_sleep = _retry_error_helper(
+                 ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_base.py", line 214, in _retry_error_helper
+    raise final_exc from source_exc
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_unary.py", line 147, in retry_target
+    result = target()
+             ^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\timeout.py", line 130, in func_with_timeout
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\grpc_helpers.py", line 77, in error_remapped_callable
+    raise exceptions.from_grpc_error(exc) from exc
+google.api_core.exceptions.ResourceExhausted: 429 Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details.
+
+[2026-02-10 20:18:46.312639] !!! AGENT ERROR: 429 Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details.
+Traceback (most recent call last):
+  File "C:\Users\rohan\OneDrive\Desktop\Final projec hackathon\indoor-health-hub\backend\agent_engine.py", line 236, in run_agent
+    )
+      
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\generativeai\generative_models.py", line 578, in send_message
+    response = self.model.generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\generativeai\generative_models.py", line 331, in generate_content
+    response = self._client.generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\ai\generativelanguage_v1beta\services\generative_service\client.py", line 827, in generate_content
+    response = rpc(
+               ^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\gapic_v1\method.py", line 131, in __call__
+    return wrapped_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_unary.py", line 294, in retry_wrapped_func
+    return retry_target(
+           ^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_unary.py", line 156, in retry_target
+    next_sleep = _retry_error_helper(
+                 ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_base.py", line 214, in _retry_error_helper
+    raise final_exc from source_exc
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_unary.py", line 147, in retry_target
+    result = target()
+             ^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\timeout.py", line 130, in func_with_timeout
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\grpc_helpers.py", line 77, in error_remapped_callable
+    raise exceptions.from_grpc_error(exc) from exc
+google.api_core.exceptions.ResourceExhausted: 429 Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details.
+
+[2026-02-10 20:18:46.312639] !!! AGENT ERROR: 429 Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details.
+Traceback (most recent call last):
+  File "C:\Users\rohan\OneDrive\Desktop\Final projec hackathon\indoor-health-hub\backend\agent_engine.py", line 236, in run_agent
+    )
+      
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\generativeai\generative_models.py", line 578, in send_message
+    response = self.model.generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\generativeai\generative_models.py", line 331, in generate_content
+    response = self._client.generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\ai\generativelanguage_v1beta\services\generative_service\client.py", line 827, in generate_content
+    response = rpc(
+               ^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\gapic_v1\method.py", line 131, in __call__
+    return wrapped_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_unary.py", line 294, in retry_wrapped_func
+    return retry_target(
+           ^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_unary.py", line 156, in retry_target
+    next_sleep = _retry_error_helper(
+                 ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_base.py", line 214, in _retry_error_helper
+    raise final_exc from source_exc
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_unary.py", line 147, in retry_target
+    result = target()
+             ^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\timeout.py", line 130, in func_with_timeout
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\grpc_helpers.py", line 77, in error_remapped_callable
+    raise exceptions.from_grpc_error(exc) from exc
+google.api_core.exceptions.ResourceExhausted: 429 Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details.
+
+[2026-02-10 20:18:49.783331] !!! AGENT ERROR: 429 Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details.
+Traceback (most recent call last):
+  File "C:\Users\rohan\OneDrive\Desktop\Final projec hackathon\indoor-health-hub\backend\agent_engine.py", line 236, in run_agent
+    )
+      
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\generativeai\generative_models.py", line 578, in send_message
+    response = self.model.generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\generativeai\generative_models.py", line 331, in generate_content
+    response = self._client.generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\ai\generativelanguage_v1beta\services\generative_service\client.py", line 827, in generate_content
+    response = rpc(
+               ^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\gapic_v1\method.py", line 131, in __call__
+    return wrapped_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_unary.py", line 294, in retry_wrapped_func
+    return retry_target(
+           ^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_unary.py", line 156, in retry_target
+    next_sleep = _retry_error_helper(
+                 ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_base.py", line 214, in _retry_error_helper
+    raise final_exc from source_exc
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_unary.py", line 147, in retry_target
+    result = target()
+             ^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\timeout.py", line 130, in func_with_timeout
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\grpc_helpers.py", line 77, in error_remapped_callable
+    raise exceptions.from_grpc_error(exc) from exc
+google.api_core.exceptions.ResourceExhausted: 429 Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details.
+
+[2026-02-10 20:19:28.196246] !!! AGENT ERROR: 429 Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details.
+Traceback (most recent call last):
+  File "C:\Users\rohan\OneDrive\Desktop\Final projec hackathon\indoor-health-hub\backend\agent_engine.py", line 236, in run_agent
+    )
+      
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\generativeai\generative_models.py", line 578, in send_message
+    response = self.model.generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\generativeai\generative_models.py", line 331, in generate_content
+    response = self._client.generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\ai\generativelanguage_v1beta\services\generative_service\client.py", line 827, in generate_content
+    response = rpc(
+               ^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\gapic_v1\method.py", line 131, in __call__
+    return wrapped_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_unary.py", line 294, in retry_wrapped_func
+    return retry_target(
+           ^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_unary.py", line 156, in retry_target
+    next_sleep = _retry_error_helper(
+                 ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_base.py", line 214, in _retry_error_helper
+    raise final_exc from source_exc
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_unary.py", line 147, in retry_target
+    result = target()
+             ^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\timeout.py", line 130, in func_with_timeout
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\grpc_helpers.py", line 77, in error_remapped_callable
+    raise exceptions.from_grpc_error(exc) from exc
+google.api_core.exceptions.ResourceExhausted: 429 Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details.
+
+[2026-02-10 20:19:53.182550] !!! AGENT ERROR: 429 Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details.
+Traceback (most recent call last):
+  File "C:\Users\rohan\OneDrive\Desktop\Final projec hackathon\indoor-health-hub\backend\agent_engine.py", line 236, in run_agent
+    )
+      
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\generativeai\generative_models.py", line 578, in send_message
+    response = self.model.generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\generativeai\generative_models.py", line 331, in generate_content
+    response = self._client.generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\ai\generativelanguage_v1beta\services\generative_service\client.py", line 827, in generate_content
+    response = rpc(
+               ^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\gapic_v1\method.py", line 131, in __call__
+    return wrapped_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_unary.py", line 294, in retry_wrapped_func
+    return retry_target(
+           ^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_unary.py", line 156, in retry_target
+    next_sleep = _retry_error_helper(
+                 ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_base.py", line 214, in _retry_error_helper
+    raise final_exc from source_exc
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_unary.py", line 147, in retry_target
+    result = target()
+             ^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\timeout.py", line 130, in func_with_timeout
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\grpc_helpers.py", line 77, in error_remapped_callable
+    raise exceptions.from_grpc_error(exc) from exc
+google.api_core.exceptions.ResourceExhausted: 429 Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details.
+
+[2026-02-10 20:20:10.382647] !!! AGENT ERROR: 429 Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details.
+Traceback (most recent call last):
+  File "C:\Users\rohan\OneDrive\Desktop\Final projec hackathon\indoor-health-hub\backend\agent_engine.py", line 236, in run_agent
+    )
+      
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\generativeai\generative_models.py", line 578, in send_message
+    response = self.model.generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\generativeai\generative_models.py", line 331, in generate_content
+    response = self._client.generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\ai\generativelanguage_v1beta\services\generative_service\client.py", line 827, in generate_content
+    response = rpc(
+               ^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\gapic_v1\method.py", line 131, in __call__
+    return wrapped_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_unary.py", line 294, in retry_wrapped_func
+    return retry_target(
+           ^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_unary.py", line 156, in retry_target
+    next_sleep = _retry_error_helper(
+                 ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_base.py", line 214, in _retry_error_helper
+    raise final_exc from source_exc
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_unary.py", line 147, in retry_target
+    result = target()
+             ^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\timeout.py", line 130, in func_with_timeout
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\grpc_helpers.py", line 77, in error_remapped_callable
+    raise exceptions.from_grpc_error(exc) from exc
+google.api_core.exceptions.ResourceExhausted: 429 Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details.
+
+[2026-02-10 20:20:30.814458] !!! AGENT ERROR: 429 Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details.
+Traceback (most recent call last):
+  File "C:\Users\rohan\OneDrive\Desktop\Final projec hackathon\indoor-health-hub\backend\agent_engine.py", line 236, in run_agent
+    )
+      
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\generativeai\generative_models.py", line 591, in send_message
+    self.history, content, response = self._handle_afc(
+                                      ^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\generativeai\generative_models.py", line 657, in _handle_afc
+    response = self.model.generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\generativeai\generative_models.py", line 331, in generate_content
+    response = self._client.generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\ai\generativelanguage_v1beta\services\generative_service\client.py", line 827, in generate_content
+    response = rpc(
+               ^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\gapic_v1\method.py", line 131, in __call__
+    return wrapped_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_unary.py", line 294, in retry_wrapped_func
+    return retry_target(
+           ^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_unary.py", line 156, in retry_target
+    next_sleep = _retry_error_helper(
+                 ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_base.py", line 214, in _retry_error_helper
+    raise final_exc from source_exc
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_unary.py", line 147, in retry_target
+    result = target()
+             ^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\timeout.py", line 130, in func_with_timeout
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\grpc_helpers.py", line 77, in error_remapped_callable
+    raise exceptions.from_grpc_error(exc) from exc
+google.api_core.exceptions.ResourceExhausted: 429 Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details.
+
+[2026-02-10 21:20:40.295510] !!! AGENT ERROR: 429 Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details.
+Traceback (most recent call last):
+  File "C:\Users\rohan\OneDrive\Desktop\Final projec hackathon\indoor-health-hub\backend\agent_engine.py", line 236, in run_agent
+    )
+      
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\generativeai\generative_models.py", line 578, in send_message
+    response = self.model.generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\generativeai\generative_models.py", line 331, in generate_content
+    response = self._client.generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\ai\generativelanguage_v1beta\services\generative_service\client.py", line 827, in generate_content
+    response = rpc(
+               ^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\gapic_v1\method.py", line 131, in __call__
+    return wrapped_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_unary.py", line 294, in retry_wrapped_func
+    return retry_target(
+           ^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_unary.py", line 156, in retry_target
+    next_sleep = _retry_error_helper(
+                 ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_base.py", line 214, in _retry_error_helper
+    raise final_exc from source_exc
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_unary.py", line 147, in retry_target
+    result = target()
+             ^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\timeout.py", line 130, in func_with_timeout
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\grpc_helpers.py", line 77, in error_remapped_callable
+    raise exceptions.from_grpc_error(exc) from exc
+google.api_core.exceptions.ResourceExhausted: 429 Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details.
+
+[2026-02-10 21:28:00.858328] !!! AGENT ERROR: 429 Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details.
+Traceback (most recent call last):
+  File "C:\Users\rohan\OneDrive\Desktop\Final projec hackathon\indoor-health-hub\backend\agent_engine.py", line 236, in run_agent
+    )
+      
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\generativeai\generative_models.py", line 578, in send_message
+    response = self.model.generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\generativeai\generative_models.py", line 331, in generate_content
+    response = self._client.generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\ai\generativelanguage_v1beta\services\generative_service\client.py", line 827, in generate_content
+    response = rpc(
+               ^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\gapic_v1\method.py", line 131, in __call__
+    return wrapped_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_unary.py", line 294, in retry_wrapped_func
+    return retry_target(
+           ^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_unary.py", line 156, in retry_target
+    next_sleep = _retry_error_helper(
+                 ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_base.py", line 214, in _retry_error_helper
+    raise final_exc from source_exc
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_unary.py", line 147, in retry_target
+    result = target()
+             ^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\timeout.py", line 130, in func_with_timeout
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\grpc_helpers.py", line 77, in error_remapped_callable
+    raise exceptions.from_grpc_error(exc) from exc
+google.api_core.exceptions.ResourceExhausted: 429 Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details.
+
+[2026-02-10 21:28:32.063491] !!! AGENT ERROR: 429 Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details.
+Traceback (most recent call last):
+  File "C:\Users\rohan\OneDrive\Desktop\Final projec hackathon\indoor-health-hub\backend\agent_engine.py", line 236, in run_agent
+    )
+      
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\generativeai\generative_models.py", line 578, in send_message
+    response = self.model.generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\generativeai\generative_models.py", line 331, in generate_content
+    response = self._client.generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\ai\generativelanguage_v1beta\services\generative_service\client.py", line 827, in generate_content
+    response = rpc(
+               ^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\gapic_v1\method.py", line 131, in __call__
+    return wrapped_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_unary.py", line 294, in retry_wrapped_func
+    return retry_target(
+           ^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_unary.py", line 156, in retry_target
+    next_sleep = _retry_error_helper(
+                 ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_base.py", line 214, in _retry_error_helper
+    raise final_exc from source_exc
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_unary.py", line 147, in retry_target
+    result = target()
+             ^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\timeout.py", line 130, in func_with_timeout
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\grpc_helpers.py", line 77, in error_remapped_callable
+    raise exceptions.from_grpc_error(exc) from exc
+google.api_core.exceptions.ResourceExhausted: 429 Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details.
+
+[2026-02-10 21:28:38.527113] !!! AGENT ERROR: 429 Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details.
+Traceback (most recent call last):
+  File "C:\Users\rohan\OneDrive\Desktop\Final projec hackathon\indoor-health-hub\backend\agent_engine.py", line 236, in run_agent
+    )
+      
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\generativeai\generative_models.py", line 578, in send_message
+    response = self.model.generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\generativeai\generative_models.py", line 331, in generate_content
+    response = self._client.generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\ai\generativelanguage_v1beta\services\generative_service\client.py", line 827, in generate_content
+    response = rpc(
+               ^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\gapic_v1\method.py", line 131, in __call__
+    return wrapped_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_unary.py", line 294, in retry_wrapped_func
+    return retry_target(
+           ^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_unary.py", line 156, in retry_target
+    next_sleep = _retry_error_helper(
+                 ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_base.py", line 214, in _retry_error_helper
+    raise final_exc from source_exc
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_unary.py", line 147, in retry_target
+    result = target()
+             ^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\timeout.py", line 130, in func_with_timeout
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\grpc_helpers.py", line 77, in error_remapped_callable
+    raise exceptions.from_grpc_error(exc) from exc
+google.api_core.exceptions.ResourceExhausted: 429 Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details.
+
+[2026-02-10 21:28:43.483709] !!! AGENT ERROR: 429 Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details.
+Traceback (most recent call last):
+  File "C:\Users\rohan\OneDrive\Desktop\Final projec hackathon\indoor-health-hub\backend\agent_engine.py", line 236, in run_agent
+    )
+      
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\generativeai\generative_models.py", line 578, in send_message
+    response = self.model.generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\generativeai\generative_models.py", line 331, in generate_content
+    response = self._client.generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\ai\generativelanguage_v1beta\services\generative_service\client.py", line 827, in generate_content
+    response = rpc(
+               ^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\gapic_v1\method.py", line 131, in __call__
+    return wrapped_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_unary.py", line 294, in retry_wrapped_func
+    return retry_target(
+           ^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_unary.py", line 156, in retry_target
+    next_sleep = _retry_error_helper(
+                 ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_base.py", line 214, in _retry_error_helper
+    raise final_exc from source_exc
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_unary.py", line 147, in retry_target
+    result = target()
+             ^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\timeout.py", line 130, in func_with_timeout
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\grpc_helpers.py", line 77, in error_remapped_callable
+    raise exceptions.from_grpc_error(exc) from exc
+google.api_core.exceptions.ResourceExhausted: 429 Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details.
+
+[2026-02-10 21:32:06.616403] !!! AGENT ERROR: 429 Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details.
+Traceback (most recent call last):
+  File "C:\Users\rohan\OneDrive\Desktop\Final projec hackathon\indoor-health-hub\backend\agent_engine.py", line 236, in run_agent
+    )
+      
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\generativeai\generative_models.py", line 578, in send_message
+    response = self.model.generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\generativeai\generative_models.py", line 331, in generate_content
+    response = self._client.generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\ai\generativelanguage_v1beta\services\generative_service\client.py", line 827, in generate_content
+    response = rpc(
+               ^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\gapic_v1\method.py", line 131, in __call__
+    return wrapped_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_unary.py", line 294, in retry_wrapped_func
+    return retry_target(
+           ^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_unary.py", line 156, in retry_target
+    next_sleep = _retry_error_helper(
+                 ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_base.py", line 214, in _retry_error_helper
+    raise final_exc from source_exc
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\retry\retry_unary.py", line 147, in retry_target
+    result = target()
+             ^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\timeout.py", line 130, in func_with_timeout
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rohan\AppData\Local\Programs\Python\Python311\Lib\site-packages\google\api_core\grpc_helpers.py", line 77, in error_remapped_callable
+    raise exceptions.from_grpc_error(exc) from exc
+google.api_core.exceptions.ResourceExhausted: 429 Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details.
+

@@ -154,7 +154,7 @@ export const DashboardChat = () => {
                                         <h3 className="font-semibold text-sm">Health Guardian</h3>
                                         <span className="text-[10px] text-green-400 flex items-center gap-1">
                                             <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
-                                            Online (OpenAI)
+                                            Online
                                         </span>
                                     </div>
                                 </div>

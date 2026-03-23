@@ -16,11 +16,12 @@ import { Header } from "@/components/Header";
 import { useSensor } from "@/contexts/SensorContext";
 import { cn } from "@/lib/utils";
 import { useState, useEffect } from "react";
-import { Activity, Thermometer, Wind, Zap } from "lucide-react";
+import { Activity, Thermometer, Wind, Zap, Download } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 /* -------------------- Tabs -------------------- */
 
-const TABS = ["health", "pm25", "tempHumidity", "noise"] as const;
+const TABS = ["health", "pm25", "tempHumidity", "noise", "airQuality"] as const;
 type Tab = (typeof TABS)[number];
 
 /* -------------------- Page -------------------- */
@@ -60,6 +61,10 @@ export default function Analytics() {
     }
   }
 
+  const handleDownload = () => {
+    window.location.href = "http://127.0.0.1:8001/api/export/monacos_room_01";
+  };
+
   /* -------- Transform for Recharts -------- */
   const data = combinedData.map((d) => ({
     time: new Date(d.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
@@ -68,6 +73,10 @@ export default function Analytics() {
     temperature: d.temperature,
     humidity: d.humidity,
     noise: d.noise,
+    co2: d.co2,
+    vocs: d.vocs,
+    pressure: d.pressure,
+    altitude: d.altitude,
   }));
 
   // Enhanced data with "simulated" health score history for the visual
@@ -144,23 +153,33 @@ export default function Analytics() {
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <h2 className="text-xl font-semibold">Historical Trends (7 Days)</h2>
 
-            {/* Tabs */}
-            <div className="flex p-1 bg-muted/30 rounded-full w-fit">
-              <TabButton active={tab === "health"} onClick={() => setTab("health")}>
-                Health
-              </TabButton>
-              <TabButton active={tab === "pm25"} onClick={() => setTab("pm25")}>
-                PM2.5
-              </TabButton>
-              <TabButton
-                active={tab === "tempHumidity"}
-                onClick={() => setTab("tempHumidity")}
-              >
-                Climate
-              </TabButton>
-              <TabButton active={tab === "noise"} onClick={() => setTab("noise")}>
-                Noise
-              </TabButton>
+            {/* Tabs & Actions */}
+            <div className="flex flex-wrap items-center gap-4">
+              <div className="flex p-1 bg-muted/30 rounded-full w-fit flex-wrap">
+                <TabButton active={tab === "health"} onClick={() => setTab("health")}>
+                  Health
+                </TabButton>
+                <TabButton active={tab === "pm25"} onClick={() => setTab("pm25")}>
+                  PM2.5
+                </TabButton>
+                <TabButton
+                  active={tab === "tempHumidity"}
+                  onClick={() => setTab("tempHumidity")}
+                >
+                  Climate
+                </TabButton>
+                <TabButton active={tab === "noise"} onClick={() => setTab("noise")}>
+                  Noise
+                </TabButton>
+                <TabButton active={tab === "airQuality"} onClick={() => setTab("airQuality")}>
+                  Gas/CO2
+                </TabButton>
+              </div>
+
+              <Button onClick={handleDownload} variant="secondary" size="sm" className="gap-2 shrink-0 rounded-full shadow-sm hover:shadow">
+                <Download className="w-4 h-4" />
+                Export CSV
+              </Button>
             </div>
           </div>
 
@@ -253,6 +272,36 @@ export default function Analytics() {
                       <Tooltip content={<CustomTooltip />} />
                       <Bar dataKey="noise" fill="#f97316" radius={[4, 4, 0, 0]} opacity={0.8} />
                     </BarChart>
+                  </GraphContainer>
+                )}
+
+                {tab === "airQuality" && (
+                  <GraphContainer>
+                    <LineChart data={dataWithScore}>
+                      <CartesianGrid strokeDasharray="3 3" opacity={0.1} vertical={false} />
+                      <XAxis dataKey="time" minTickGap={60} tick={{ fill: '#888', fontSize: 12 }} />
+                      <YAxis yAxisId="left" tick={{ fill: '#10b981', fontSize: 12 }} />
+                      <YAxis yAxisId="right" orientation="right" tick={{ fill: '#8b5cf6', fontSize: 12 }} />
+                      <Tooltip content={<CustomTooltip />} />
+                      <Line
+                        yAxisId="left"
+                        type="monotone"
+                        dataKey="co2"
+                        stroke="#10b981"
+                        strokeWidth={3}
+                        dot={false}
+                        name="CO2"
+                      />
+                      <Line
+                        yAxisId="right"
+                        type="monotone"
+                        dataKey="vocs"
+                        stroke="#8b5cf6"
+                        strokeWidth={3}
+                        dot={false}
+                        name="VOCs"
+                      />
+                    </LineChart>
                   </GraphContainer>
                 )}
               </>

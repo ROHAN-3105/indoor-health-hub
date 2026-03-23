@@ -1,30 +1,239 @@
-# Python
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Rohan Master Study Plan</title>
 
-# Env
-.env
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
-# Databases
-*.db
+<style>
+body{
+    font-family:'Poppins',sans-serif;
+    background:linear-gradient(to right,#0f2027,#203a43,#2c5364);
+    color:white;
+    padding:20px;
+}
 
-# Logs & debug
-*.log
-*.txt
+h1,h2{
+    text-align:center;
+}
 
-# Node
-node_modules/
+.container{
+    max-width:1200px;
+    margin:auto;
+}
 
-# OS
-.DS_Store
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:20px;
+}
 
-# Local tools & debug scripts
-.vscode/
-check_schema.py
-debug_data.py
-generate_history.py
-list_models.py
-verify_device.py
-check_import.py
+th,td{
+    border:1px solid rgba(255,255,255,0.3);
+    padding:10px;
+    text-align:center;
+}
+
+th{
+    background:rgba(0,0,0,0.5);
+}
+
+.section{
+    background:rgba(255,255,255,0.08);
+    padding:20px;
+    border-radius:12px;
+    margin-top:30px;
+}
+
+button{
+    padding:12px 25px;
+    border:none;
+    border-radius:8px;
+    background:#00ffcc;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#00ccaa;
+}
+
+.footer{
+    text-align:center;
+    margin-top:40px;
+    font-size:14px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container" id="studyPlan">
+
+<h1>📚 COMPLETE MASTER STUDY PLAN</h1>
+<p style="text-align:center;">Sleep: 1:00 AM – 8:30 AM</p>
+
+<div class="section">
+<h2>🔥 Feb 18 – March 1 (Full Coverage Phase)</h2>
+
+<table>
+<tr>
+<th>Date</th>
+<th>Morning (Major)</th>
+<th>Afternoon (Major)</th>
+<th>Evening (Minor)</th>
+<th>Night (Revision)</th>
+</tr>
+
+<tr>
+<td>Feb 18</td>
+<td>Probability M1</td>
+<td>DLD M1</td>
+<td>Data Science M1</td>
+<td>Revise Notes</td>
+</tr>
+
+<tr>
+<td>Feb 19</td>
+<td>Probability M2</td>
+<td>OS M1</td>
+<td>Computer Networks M1</td>
+<td>Practice</td>
+</tr>
+
+<tr>
+<td>Feb 20</td>
+<td>Probability M3</td>
+<td>DLD M2</td>
+<td>Parallel Computing M1</td>
+<td>PYQs</td>
+</tr>
+
+<tr>
+<td>Feb 21</td>
+<td>Probability M4</td>
+<td>OS M2</td>
+<td>AWS M1</td>
+<td>Revise</td>
+</tr>
+
+<tr>
+<td>Feb 22</td>
+<td>Probability M5</td>
+<td>DLD M3</td>
+<td>Advanced Java M1</td>
+<td>Practice</td>
+</tr>
+
+<tr>
+<td>Feb 23</td>
+<td>Probability Revision</td>
+<td>OS M3</td>
+<td>Mobile Dev M1</td>
+<td>Numericals</td>
+</tr>
+
+<tr>
+<td>Feb 24</td>
+<td>Probability PYQs</td>
+<td>DLD M4</td>
+<td>Linear Algebra M1</td>
+<td>Revise</td>
+</tr>
+
+<tr>
+<td>Feb 25</td>
+<td>Full Probability Rev</td>
+<td>OS M4</td>
+<td>Lateral Thinking M1</td>
+<td>Weak Areas</td>
+</tr>
+
+<tr>
+<td>Feb 26</td>
+<td>DLD M5</td>
+<td>CN M2</td>
+<td>Data Science M2</td>
+<td>Revise</td>
+</tr>
+
+<tr>
+<td>Feb 27</td>
+<td>OS M5</td>
+<td>Parallel M2</td>
+<td>AWS M2</td>
+<td>Practice</td>
+</tr>
+
+<tr>
+<td>Feb 28</td>
+<td>DLD Revision</td>
+<td>Java M2</td>
+<td>Mobile Dev M2</td>
+<td>Revise</td>
+</tr>
+
+<tr>
+<td>March 1</td>
+<td>Probability Final Rev</td>
+<td>Linear Algebra M2</td>
+<td>Lateral Thinking M2</td>
+<td>Light Review</td>
+</tr>
+
+</table>
+</div>
+
+<div class="section">
+<h2>🔥 Exam Window Intensive Coverage</h2>
+
+<table>
+<tr>
+<th>Date</th>
+<th>Plan</th>
+</tr>
+
+<tr>
+<td>March 2</td>
+<td>Probability Exam → DLD Final Rev → DS M3 + CN M3</td>
+</tr>
+
+<tr>
+<td>March 3</td>
+<td>OS Rev → Parallel M3 → AWS M3</td>
+</tr>
+
+<tr>
+<td>March 4</td>
+<td>DLD Exam → OS Full Rev → Java M3 + Mobile M3</td>
+</tr>
+
+<tr>
+<td>March 5</td>
+<td>OS Exam → Linear Algebra M3 → Lateral Thinking M3</td>
+</tr>
+
+</table>
+</div>
+
+<div style="text-align:center;margin-top:30px;">
+<button onclick="downloadPDF()">⬇ Download as PDF</button>
+</div>
+
+<div class="footer">
+Stay consistent. Discipline > Motivation.
+</div>
+
+</div>
+
+<script>
+function downloadPDF(){
+    const element=document.getElementById("studyPlan");
+    html2pdf().from(element).save("Master_Study_Plan.pdf");
+}
+</script>
+
+</body>
+</html>

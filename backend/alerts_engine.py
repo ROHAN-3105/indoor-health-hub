@@ -178,4 +178,70 @@ def generate_alerts(data: dict):
                 "timestamp": now
             })
 
+    # -----------------------------
+    # Sensor Interference / Diagnostics
+    # -----------------------------
+    
+    # 1. Light > 10,000 lux
+    light = data.get("light", 0)
+    if light > 10000:
+        alert_type = "INTERFERENCE_LIGHT"
+        if _can_emit(device_id, alert_type):
+            alerts.append({
+                "id": _new_alert_id(alert_type),
+                "severity": "High",
+                "title": "Sensor Interference Alert",
+                "message": "Light > 10,000 lux. Check if a flashlight is pointing directly at the sensor or if it’s in direct midday sunlight.",
+                "sensor": "Light Sensor",
+                "timestamp": now
+            })
+
+    # 2. Temp > 45°C (and smoke/VOCs low)
+    # Assuming 'gas' or 'vocs' represents smoke/vocs. 
+    # The SensorPayload has 'vocs', 'gas'. Let's check 'vocs' first, then 'gas'.
+    # If not present, we might skip the secondary check or assume low.
+    # User said: "Temp > 45°C (and smoke/VOCs are low)"
+    # Let's define "low" as... maybe < 100 (arbitrary, but standard is usually higher for smoke) 
+    # or just if Temp is high.
+    # Looking at data model: 'vocs' is optional.
+    vocs = data.get("vocs", 0)
+    if temp > 45 and vocs < 200: # Assuming < 200 index is "low/normal" for many sensors
+        alert_type = "INTERFERENCE_HEAT"
+        if _can_emit(device_id, alert_type):
+            alerts.append({
+                "id": _new_alert_id(alert_type),
+                "severity": "High",
+                "title": "Sensor Interference Alert",
+                "message": "Temp > 45°C with low VOCs. Check if device is on a heat-emitting appliance (laptop exhaust, router).",
+                "sensor": "Temperature Sensor",
+                "timestamp": now
+            })
+
+    # 3. Humidity > 95%
+    if humidity > 95:
+        alert_type = "INTERFERENCE_HUMIDITY"
+        if _can_emit(device_id, alert_type):
+            alerts.append({
+                "id": _new_alert_id(alert_type),
+                "severity": "High",
+                "title": "Sensor Interference Alert",
+                "message": "Humidity > 95%. Check if near a humidifier or if someone breathed on the sensor.",
+                "sensor": "Humidity Sensor",
+                "timestamp": now
+            })
+
+    # 4. CO2 < 400 ppm
+    co2 = data.get("co2", 450) # Default to 450 (normal) if missing so we don't trigger alert on missing data
+    if co2 < 400 and co2 > 0: # > 0 to ensure it's a real reading
+        alert_type = "INTERFERENCE_CO2"
+        if _can_emit(device_id, alert_type):
+            alerts.append({
+                "id": _new_alert_id(alert_type),
+                "severity": "Medium",
+                "title": "Sensor Interference Alert",
+                "message": "CO2 < 400 ppm. The sensor may need calibration (outdoor baseline is ~400ppm).",
+                "sensor": "CO2 Sensor",
+                "timestamp": now
+            })
+
     return alerts

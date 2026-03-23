@@ -1,9 +1,11 @@
 from fastapi import FastAPI, HTTPException
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from datetime import datetime, timedelta
 from typing import Dict, List
+import io
+import csv
 
 from recommendation_engine import generate_recommendations
 from aqi_engine import calculate_pm_aqi
@@ -12,6 +14,7 @@ from health_engine import calculate_health_score
 import auth
 from db import create_user, get_user_by_username, init_db
 from schemas import UserCreate, Token, UserResponse
+from prediction_engine import generate_predictions
 
 # ---------------------------
 # APP SETUP
@@ -155,7 +158,7 @@ class SensorPayload(BaseModel):
 
 @app.post("/api/ingest")
 def ingest(payload: SensorPayload):
-    from db import ensure_device_exists
+    from db import ensure_device_exists, get_db
     
     timestamp = payload.timestamp or datetime.utcnow()
 
@@ -173,6 +176,26 @@ def ingest(payload: SensorPayload):
     # history buffer
     DEVICE_HISTORY.setdefault(payload.device_id, []).append(data)
     DEVICE_HISTORY[payload.device_id] = DEVICE_HISTORY[payload.device_id][-MAX_HISTORY:]
+
+    # Persist to DB
+    try:
+        conn = get_db()
+        cursor = conn.cursor()
+        cursor.execute("""
+            INSERT INTO sensor_readings (
+                device_id, temperature, humidity, pm25, pm10, noise, light,
+                altitude, pressure, co2, vocs, aqi, air_quality_score, timestamp
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """, (
+            payload.device_id, payload.temperature, payload.humidity, 
+            payload.pm25, payload.pm10, payload.noise, payload.light,
+            payload.altitude, payload.pressure, payload.co2, payload.vocs,
+            payload.aqi, payload.air_quality_score, timestamp
+        ))
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        print(f"DB Error during ingest: {e}")
 
     return {
         "status": "ingested",
@@ -234,7 +257,7 @@ def get_history(device_id: str):
     # Get last 7 days of data
     # We generated data with timestamp being stored. 
     # SQLite stores DATETIME as strings usually.
-    seven_days_ago = datetime.utcnow() - timedelta(days=7)
+    seven_days_ago = (datetime.utcnow() - timedelta(days=7)).strftime('%Y-%m-%d %H:%M:%S')
     
     cursor.execute("""
         SELECT * FROM sensor_readings 
@@ -248,6 +271,82 @@ def get_history(device_id: str):
     results = [dict(row) for row in rows]
     print(f"DEBUG: Found {len(results)} history records for {device_id}")
     return results
+
+@app.get("/api/export/{device_id}")
+def export_data(device_id: str):
+    print(f"DEBUG: Exporting data for {device_id}")
+    from db import get_db
+    conn = get_db()
+    cursor = conn.cursor()
+    
+    seven_days_ago = (datetime.utcnow() - timedelta(days=7)).strftime('%Y-%m-%d %H:%M:%S')
+    
+    cursor.execute("""
+        SELECT * FROM sensor_readings 
+        WHERE device_id = ? AND timestamp >= ? 
+        ORDER BY timestamp ASC
+    """, (device_id, seven_days_ago))
+    
+    rows = cursor.fetchall()
+    conn.close()
+    
+    latest = DEVICE_STATE.get(device_id)
+    results = [dict(row) for row in rows]
+    
+    if latest and results:
+        results.append(latest)
+    elif latest and not results:
+        results.append(latest)
+        
+    if not results:
+        raise HTTPException(404, "No data found for device")
+
+    output = io.StringIO()
+    
+    # Collect all possible keys across all rows to prevent DictWriter ValueError
+    all_keys = []
+    for row in results:
+        for k in row.keys():
+            if k not in all_keys:
+                all_keys.append(k)
+                
+    writer = csv.DictWriter(output, fieldnames=all_keys, extrasaction='ignore')
+    writer.writeheader()
+    for row in results:
+        writer.writerow(row)
+        
+    output.seek(0)
+    
+    return StreamingResponse(
+        iter([output.getvalue()]),
+        media_type="text/csv",
+        headers={"Content-Disposition": f"attachment; filename=sensor_data_{device_id}.csv"}
+    )
+
+# ---------------------------
+# PREDICTIONS
+# ---------------------------
+
+@app.get("/api/predict/{device_id}")
+def get_predictions(device_id: str):
+    """
+    Returns multi-target regression predictions for the next 24 hours
+    along with WHO standard alerts.
+    """
+    if device_id not in DEVICE_STATE:
+        # We might still have data in DB even if offline in memory
+        from db import ensure_device_exists
+        # Check if device exists at all
+        pass 
+    
+    try:
+        results = generate_predictions(device_id)
+        if "error" in results:
+            raise HTTPException(status_code=400, detail=results["error"])
+        return results
+    except Exception as e:
+        print(f"Prediction Error: {e}")
+        raise HTTPException(status_code=500, detail="Failed to generate predictions")
 
 # ---------------------------
 # HEALTH SCORE

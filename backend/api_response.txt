@@ -1,0 +1,1 @@
+{"response":"Hello! How can I help you today? I can provide live data from your device, predict air quality trends, check health standards, and manage connected hardware.\n","actions_taken":[]}
