@@ -8,7 +8,7 @@
 ## 🚀 Key Features
 ## 🌐 Live Demo
 
-🚀 **Demo:** - https://drive.google.com/drive/folders/1Er4pRbyhqdy4F2ezENYRZFxNI8wKynl_  (Both Frontend and hardware were integrated using same wifi )
+🚀 **Demo:** - https://drive.google.com/drive/folders/1Er4pRbyhqdy4F2ezENYRZFxNI8wKynl_?usp=sharing  (Both Frontend and hardware were integrated using same wifi )
 
 ### 📊 Real-Time Dashboard
 - **Live Monitoring**: Visualize critical metrics including Temperature, Humidity, PM2.5, PM10, Noise, and Light levels.
