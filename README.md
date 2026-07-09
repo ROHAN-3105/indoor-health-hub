@@ -6,6 +6,9 @@
 **Monacos** is a comprehensive indoor environmental monitoring system designed to track, analyze, and improve your living space's health. It combines real-time sensor data with advanced AI insights to provide actionable recommendations.
 
 ## 🚀 Key Features
+## 🌐 Live Demo
+
+🚀 **Demo:** https://YOUR_DEMO_LINK_HERE
 
 ### 📊 Real-Time Dashboard
 - **Live Monitoring**: Visualize critical metrics including Temperature, Humidity, PM2.5, PM10, Noise, and Light levels.
