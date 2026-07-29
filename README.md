@@ -11,6 +11,20 @@
 🎥 **Project Demo:**  
 https://drive.google.com/drive/folders/1Er4pRbyhqdy4F2ezENYRZFxNI8wKynl_?usp=sharing
 
+## 📷 Hardware Prototype
+
+The Monacos Indoor Health Intelligence Hub is powered by an ESP32 microcontroller integrated with multiple environmental sensors for real-time indoor monitoring.
+
+<p align="center">
+  <img src="images/hardware_front.jpg" alt="Front View of Indoor Health Hub" width="45%">
+  <img src="images/hardware_top.jpg" alt="Top View of Indoor Health Hub" width="45%">
+</p>
+
+<p align="center">
+<b>Front View</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<b>Top View</b>
+</p>
+
 ### 📊 Real-Time Dashboard
 - **Live Monitoring**: Visualize critical metrics including Temperature, Humidity, PM2.5, PM10, Noise, and Light levels.
 - **Health Score**: An aggregated 0-100 health score algorithm based on WHO and ASHRAE standards.
