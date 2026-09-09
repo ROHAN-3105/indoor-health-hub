@@ -11,9 +11,10 @@ import {
   CartesianGrid,
 } from "recharts";
 import { cn } from "@/lib/utils";
-import { Header } from "@/components/Header";
 
-const API_BASE = "http://127.0.0.1:8001/api";
+const API_BASE = `${
+  import.meta.env.VITE_API_URL || "http://localhost:8000"
+}/api`;
 
 export default function DeviceDetails() {
   const { id } = useParams();
@@ -41,7 +42,9 @@ export default function DeviceDetails() {
     };
 
     fetchAll();
+
     const i = setInterval(fetchAll, 5000);
+
     return () => clearInterval(i);
   }, [id]);
 
@@ -51,7 +54,6 @@ export default function DeviceDetails() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Header />
       <main className="container mx-auto px-4 py-8 space-y-8">
         {/* Header */}
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
@@ -64,10 +66,22 @@ export default function DeviceDetails() {
         {/* Live Metrics */}
         {latest && (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            <Metric label="Temperature" value={`${latest.temperature} °C`} />
-            <Metric label="Humidity" value={`${latest.humidity} %`} />
-            <Metric label="PM2.5" value={`${latest.pm25} µg/m³`} />
-            <Metric label="Noise" value={`${latest.noise} dB`} />
+            <Metric
+              label="Temperature"
+              value={`${latest.temperature} °C`}
+            />
+            <Metric
+              label="Humidity"
+              value={`${latest.humidity} %`}
+            />
+            <Metric
+              label="PM2.5"
+              value={`${latest.pm25} µg/m³`}
+            />
+            <Metric
+              label="Noise"
+              value={`${latest.noise} dB`}
+            />
           </div>
         )}
 
@@ -78,6 +92,7 @@ export default function DeviceDetails() {
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={history}>
               <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
+
               <XAxis
                 dataKey="timestamp"
                 tickFormatter={(v) =>
@@ -87,12 +102,15 @@ export default function DeviceDetails() {
                   })
                 }
               />
+
               <YAxis />
+
               <Tooltip
                 labelFormatter={(v) =>
                   new Date(v).toLocaleTimeString()
                 }
               />
+
               <Line
                 type="monotone"
                 dataKey="pm25"
@@ -108,7 +126,13 @@ export default function DeviceDetails() {
   );
 }
 
-const Metric = ({ label, value }: { label: string; value: string }) => (
+const Metric = ({
+  label,
+  value,
+}: {
+  label: string;
+  value: string;
+}) => (
   <div className="glass-card rounded-2xl p-5">
     <div className="text-xs text-muted-foreground">{label}</div>
     <div className="text-xl font-semibold">{value}</div>

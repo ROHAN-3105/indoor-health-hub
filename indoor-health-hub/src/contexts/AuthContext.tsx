@@ -1,12 +1,14 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { toast } from "sonner";
 
+const API_BASE_URL =
+    import.meta.env.VITE_API_URL || "http://localhost:8000";
+
 interface User {
     username: string;
     email?: string;
     full_name?: string;
     created_at?: string;
-    avatar?: string;
 }
 
 interface AuthContextType {
@@ -15,44 +17,36 @@ interface AuthContextType {
     login: (username: string, password: string) => Promise<void>;
     signup: (username: string, password: string) => Promise<void>;
     logout: () => void;
-    updateProfile: (data: Partial<User>) => void;
     isLoading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
+    children,
+}) => {
     const [user, setUser] = useState<User | null>(null);
-    const [token, setToken] = useState<string | null>(localStorage.getItem("token"));
+    const [token, setToken] = useState<string | null>(
+        localStorage.getItem("token")
+    );
     const [isLoading, setIsLoading] = useState(true);
-
-    const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8001";
 
     const fetchProfile = async (accessToken: string) => {
         try {
             const res = await fetch(`${API_BASE_URL}/auth/me`, {
-                headers: { Authorization: `Bearer ${accessToken}` }
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
             });
+
             if (res.ok) {
                 const profile = await res.json();
-                // Merge with local avatar preference if backend doesn't support it yet
-                const localUser = JSON.parse(localStorage.getItem("user") || "{}");
-                const finalProfile = { ...profile, avatar: localUser.avatar || profile.avatar };
-
-                setUser(finalProfile);
-                localStorage.setItem("user", JSON.stringify(finalProfile));
+                setUser(profile);
+                localStorage.setItem("user", JSON.stringify(profile));
             }
         } catch (e) {
             console.error("Failed to fetch profile", e);
         }
-    };
-
-    const updateProfile = (data: Partial<User>) => {
-        if (!user) return;
-        const updatedUser = { ...user, ...data };
-        setUser(updatedUser);
-        localStorage.setItem("user", JSON.stringify(updatedUser));
-        toast.info("Profile updated locally");
     };
 
     useEffect(() => {
@@ -61,14 +55,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
         if (storedToken) {
             setToken(storedToken);
+
             if (storedUser) {
                 setUser(JSON.parse(storedUser));
-                // Refresh profile in background
                 fetchProfile(storedToken);
             } else {
                 fetchProfile(storedToken);
             }
         }
+
         setIsLoading(false);
     }, []);
 
@@ -76,8 +71,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         try {
             const response = await fetch(`${API_BASE_URL}/auth/login`, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ username, password }),
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    username,
+                    password,
+                }),
             });
 
             if (!response.ok) {
@@ -91,7 +91,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             localStorage.setItem("token", accessToken);
             setToken(accessToken);
 
-            // Fetch full profile immediately
             await fetchProfile(accessToken);
 
             toast.success("Welcome back!");
@@ -105,8 +104,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         try {
             const response = await fetch(`${API_BASE_URL}/auth/signup`, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ username, password }),
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    username,
+                    password,
+                }),
             });
 
             if (!response.ok) {
@@ -130,7 +134,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     return (
-        <AuthContext.Provider value={{ user, token, login, signup, logout, updateProfile, isLoading }}>
+        <AuthContext.Provider
+            value={{
+                user,
+                token,
+                login,
+                signup,
+                logout,
+                isLoading,
+            }}
+        >
             {children}
         </AuthContext.Provider>
     );
@@ -138,8 +151,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
 export const useAuth = () => {
     const context = useContext(AuthContext);
+
     if (context === undefined) {
         throw new Error("useAuth must be used within an AuthProvider");
     }
+
     return context;
 };

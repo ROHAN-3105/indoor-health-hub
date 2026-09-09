@@ -1,5 +1,4 @@
 import { motion } from "framer-motion";
-import { Header } from "@/components/Header";
 import { useEffect, useState } from "react";
 import {
   Wifi,
@@ -10,15 +9,14 @@ import {
   Sun,
   ChevronRight,
   Plus,
-  Bluetooth,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { useSensor } from "@/contexts/SensorContext";
-import { useToast } from "@/components/ui/use-toast";
 
-const API_BASE = "http://127.0.0.1:8001/api";
+const API_BASE = `${
+  import.meta.env.VITE_API_URL || "http://localhost:8000"
+}/api`;
 
 /* ---------------- Types ---------------- */
 
@@ -35,90 +33,11 @@ interface Device {
   light?: number;
 }
 
-
 /* ---------------- Page ---------------- */
 
 export default function Devices() {
   const [devices, setDevices] = useState<Device[]>([]);
   const [loading, setLoading] = useState(true);
-
-  // Bluetooth State
-  const [bleConnected, setBleConnected] = useState(false);
-  const [bleConnecting, setBleConnecting] = useState(false);
-  const [bleDevice, setBleDevice] = useState<any>(null);
-
-  const { injectSensorData } = useSensor();
-  const { toast } = useToast();
-
-  const handleConnect = async () => {
-    const nav = navigator as any;
-    if (!nav.bluetooth) {
-      toast({
-        title: "Not Supported",
-        description: "Web Bluetooth is not supported in this browser.",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    try {
-      setBleConnecting(true);
-      const device = await nav.bluetooth.requestDevice({
-        filters: [{ name: "Monacos_Hub" }],
-        optionalServices: ["4fafc201-1fb5-459e-8fcc-c5c9c331914b"]
-      });
-
-      const server = await device.gatt?.connect();
-      const service = await server?.getPrimaryService("4fafc201-1fb5-459e-8fcc-c5c9c331914b");
-      const char = await service?.getCharacteristic("beb5483e-36e1-4688-b7f5-ea07361b26a8");
-
-      await char?.startNotifications();
-
-      char?.addEventListener('characteristicvaluechanged', (event: any) => {
-        const value = new TextDecoder().decode(event.target.value);
-        // data format: temperature,humidity,pressure,gasResistance
-        const parts = value.split(',');
-        if (parts.length >= 2) {
-          const temp = parseFloat(parts[0]);
-          const hum = parseFloat(parts[1]);
-          // We ignore pressure/gas for now as per SensorData type, or we could add them
-
-          console.log("BLE Data:", value);
-          injectSensorData({
-            temperature: temp,
-            humidity: hum,
-            // If we want to infer others or just update these
-          });
-        }
-      });
-
-      device.addEventListener('gattserverdisconnected', () => {
-        setBleConnected(false);
-        setBleDevice(null);
-        toast({ title: "Bluetooth Disconnected", description: "Device connection lost." });
-      });
-
-      setBleDevice(device);
-      setBleConnected(true);
-      toast({ title: "Connected", description: "Linked to Monacos_Hub via Bluetooth." });
-
-    } catch (error) {
-      console.error(error);
-      toast({
-        title: "Connection Failed",
-        description: String(error),
-        variant: "destructive"
-      });
-    } finally {
-      setBleConnecting(false);
-    }
-  };
-
-  const handleDisconnect = () => {
-    if (bleDevice && bleDevice.gatt?.connected) {
-      bleDevice.gatt.disconnect();
-    }
-  };
 
   useEffect(() => {
     const fetchDevices = async () => {
@@ -138,26 +57,26 @@ export default function Devices() {
               const latestRes = await fetch(
                 `${API_BASE}/latest/${d.device_id}`
               );
+
               if (!latestRes.ok) throw new Error();
 
               const latest = await latestRes.json();
+
               return {
                 device_id: d.device_id,
                 last_seen: d.last_seen,
-                status: d.status as DeviceStatus,
+                status: "online" as const,
                 temperature: latest.temperature,
                 pm25: latest.pm25,
                 noise: latest.noise,
                 light: latest.light,
               };
-
             } catch {
               return {
                 device_id: d.device_id,
                 last_seen: d.last_seen,
                 status: "offline" as const,
               };
-
             }
           })
         );
@@ -172,13 +91,14 @@ export default function Devices() {
     };
 
     fetchDevices();
+
     const interval = setInterval(fetchDevices, 5000);
+
     return () => clearInterval(interval);
   }, []);
 
   return (
     <div className="min-h-screen bg-background">
-      <Header />
       <main className="container mx-auto px-4 py-8 space-y-8">
         {/* Header */}
         <div className="flex items-center justify-between">
@@ -187,64 +107,37 @@ export default function Devices() {
             animate={{ opacity: 1, y: 0 }}
           >
             <h1 className="text-3xl font-bold font-display">Devices</h1>
+
             <p className="text-muted-foreground">
               Live indoor monitoring units connected to Monacos
             </p>
           </motion.div>
 
-          {/* Bluetooth Control Section */}
-          <div className="flex items-center gap-4">
-            <div className={cn(
-              "flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium border",
-              bleConnected
-                ? "bg-green-500/10 text-green-500 border-green-500/20"
-                : bleConnecting
-                  ? "bg-yellow-500/10 text-yellow-500 border-yellow-500/20"
-                  : "bg-muted text-muted-foreground border-transparent"
-            )}>
-              <Bluetooth className={cn("w-4 h-4", bleConnected && "fill-current")} />
-              {bleConnected ? "BLE Connected" : bleConnecting ? "Connecting..." : "BLE Ready"}
-            </div>
-
-            {bleConnected ? (
-              <Button
-                variant="outline"
-                onClick={handleDisconnect}
-                className="gap-2 border-destructive/20 text-destructive hover:bg-destructive/10"
-              >
-                Disconnect
-              </Button>
-            ) : (
-              <Button
-                variant="outline"
-                onClick={handleConnect}
-                disabled={bleConnecting}
-                className="gap-2 border-primary/20 hover:bg-primary/5"
-              >
-                Connect Bluetooth
-              </Button>
-            )}
-
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-            >
-              <Button className="gradient-primary text-primary-foreground shadow-glow gap-2">
-                <Plus className="w-4 h-4" /> Add Device
-              </Button>
-            </motion.div>
-          </div>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+          >
+            <Button className="gradient-primary text-primary-foreground shadow-glow gap-2">
+              <Plus className="w-4 h-4" />
+              Add Device
+            </Button>
+          </motion.div>
         </div>
 
         {/* Loading */}
         {loading && (
-          <p className="text-muted-foreground">Discovering devices…</p>
+          <p className="text-muted-foreground">
+            Discovering devices…
+          </p>
         )}
 
         {/* Empty */}
         {!loading && devices.length === 0 && (
           <div className="glass-card rounded-2xl p-10 text-center">
-            <p className="text-lg font-medium mb-2">No devices online</p>
+            <p className="text-lg font-medium mb-2">
+              No devices online
+            </p>
+
             <p className="text-sm text-muted-foreground">
               Start hardware or send data via Postman to see devices here.
             </p>
@@ -278,6 +171,7 @@ export default function Devices() {
                     <h3 className="text-xl font-semibold capitalize">
                       {d.device_id.replaceAll("_", " ")}
                     </h3>
+
                     <p className="text-xs text-muted-foreground">
                       Indoor Monitoring Unit
                     </p>
@@ -296,6 +190,7 @@ export default function Devices() {
                     ) : (
                       <WifiOff className="w-4 h-4" />
                     )}
+
                     {online ? "Online" : "Offline"}
                   </span>
                 </div>
@@ -311,6 +206,7 @@ export default function Devices() {
                         : "--"
                     }
                   />
+
                   <Metric
                     icon={<Wind />}
                     label="PM2.5"
@@ -320,6 +216,7 @@ export default function Devices() {
                         : "--"
                     }
                   />
+
                   <Metric
                     icon={<Volume2 />}
                     label="Noise"
@@ -329,6 +226,7 @@ export default function Devices() {
                         : "--"
                     }
                   />
+
                   <Metric
                     icon={<Sun />}
                     label="Light"
@@ -381,8 +279,12 @@ const Metric = ({
     <div className="w-9 h-9 rounded-xl bg-muted/40 flex items-center justify-center">
       {icon}
     </div>
+
     <div>
-      <div className="text-xs text-muted-foreground">{label}</div>
+      <div className="text-xs text-muted-foreground">
+        {label}
+      </div>
+
       <div className="font-medium">{value}</div>
     </div>
   </div>
